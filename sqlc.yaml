@@ -1,0 +1,11 @@
+version: "1"
+packeges:
+- name: "db"
+    path: "./db/sqlc"
+    path: "./db/query/"
+    engine: "postgresql"
+    emit_json_tags: true
+    emit_prepared_queries: false
+    emit_inteface: true
+    emit_exact_table_names: false
+    emit_empyt_slices: true
