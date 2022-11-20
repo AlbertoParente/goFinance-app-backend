@@ -5,7 +5,7 @@ INSERT INTO categories (
     type,
     description
 ) VALUES (
-    $1, $2, $3
+    $1, $2, $3, $4
 ) RETURNING *;
 
 -- name: GetCategory :one
