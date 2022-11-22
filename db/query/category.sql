@@ -21,9 +21,9 @@ WHERE user_id = $1
 
 -- name: UpdateCategory :one
 UPDATE categories 
-SET title = $1, 
-    description = $2 
-WHERE ID = $1 
+SET title = $2, 
+    description = $3 
+WHERE id = $1 
 RETURNING *;
 
 -- name: DelereCategory :exec
