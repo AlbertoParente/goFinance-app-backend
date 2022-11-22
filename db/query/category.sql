@@ -9,11 +9,13 @@ INSERT INTO categories (
 ) RETURNING *;
 
 -- name: GetCategory :one
-SELECT * FROM categories 
+SELECT * 
+FROM categories 
 WHERE id = $1 LIMIT 1;
 
 -- name: GetCategories :many
-SELECT * FROM categories 
+SELECT * 
+FROM categories 
 WHERE user_id = $1 
   AND type = $2 
   AND title LIKE $3 
@@ -27,5 +29,6 @@ WHERE id = $1
 RETURNING *;
 
 -- name: DelereCategory :exec
-DELETE FROM categories 
+DELETE 
+FROM categories 
 WHERE id = $1;

@@ -1,7 +1,7 @@
 -- name: CreateAccount :one
 INSERT INTO accounts (
     user_id,
-    category_id
+    category_id,
     title,
     type,
     description,
@@ -12,20 +12,20 @@ INSERT INTO accounts (
 ) RETURNING *;
 
 -- name: GetAccount :one
-SELECT * FROM accounts 
+SELECT * 
+FROM accounts 
 WHERE id = $1 LIMIT 1;
 
 -- name: GetAccounts :many
-SELECT
-    a.id,
-    a.user_id,
-    a.title,
-    a.type,
-    a.description,
-    a.value,
-    a.date,
-    a.created_at,
-    c.title AS category_title
+SELECT a.id,
+       a.user_id,
+       a.title,
+       a.type,
+       a.description,
+       a.value,
+       a.date,
+       a.created_at,
+       c.title AS category_title
 FROM accounts a
   LEFT JOIN categories c ON c.id = a.category_id 
 WHERE a.user_id = $1 
@@ -56,5 +56,6 @@ WHERE id = $1
 RETURNING *;
 
 -- name: DelereAccount :exec
-DELETE FROM accounts
+DELETE 
+FROM accounts
 WHERE id = $1;

@@ -127,19 +127,20 @@ func (q *Queries) GetCategory(ctx context.Context, id int32) (Category, error) {
 
 const updateCategory = `-- name: UpdateCategory :one
 UPDATE categories 
-SET title = $1, 
-    description = $2 
-WHERE ID = $1 
+SET title = $2, 
+    description = $3 
+WHERE id = $1 
 RETURNING id, user_id, title, type, description, created_at
 `
 
 type UpdateCategoryParams struct {
+	ID          int32  `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
 
 func (q *Queries) UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error) {
-	row := q.db.QueryRowContext(ctx, updateCategory, arg.Title, arg.Description)
+	row := q.db.QueryRowContext(ctx, updateCategory, arg.ID, arg.Title, arg.Description)
 	var i Category
 	err := row.Scan(
 		&i.ID,
