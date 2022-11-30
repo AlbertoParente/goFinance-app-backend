@@ -70,3 +70,26 @@ func TestUpdateCategory(t *testing.T) Category {
 	require.Equal(t, arq.Description, category2.Description)
 	require.NotEmpty(t, category2.CreatedAt)
 }
+
+func TestListCategories(t *testing.T) Category {
+	lasCategory := createRandomCategory(t)
+
+	arq := CreateCategoryParams{
+		UserID:      lasCategory.UserID,
+		Type:        lasCategory.Type,
+		Title:       lasCategory.Title,
+		Description: lasCategory.Description,
+	}
+
+	category2, err := testQueries.UpdateCategories(context.Background(), arq)
+	require.NoError(t, err)
+	require.NotEmpty(t, category2)
+
+	for _, category := range categorys {
+		require.Equal(t, lasCategory.ID, category2.ID)
+		require.Equal(t, lasCategory.UserID, category2.UserID)
+		require.Equal(t, lasCategory.Title, category2.Title)
+		require.Equal(t, lasCategory.Description, category2.Description)
+		require.NotEmpty(t, lasCategory.CreatedAt)
+	}
+}
