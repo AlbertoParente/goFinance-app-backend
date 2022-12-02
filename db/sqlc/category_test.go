@@ -48,20 +48,20 @@ func TestGetCategory(t *testing.T) {
 
 func TestDeleteCategory(t *testing.T) {
 	category := createRandomCategory(t)
-	err := testQueries.DeleteCategories(context.Background(), category.ID)
+	err := testQueries.DelereCategory(context.Background(), category.ID)
 	require.NoError(t, err)
 }
 
 func TestUpdateCategory(t *testing.T) Category {
 	category1 := createRandomCategory(t)
 
-	arq := CreateCategoryParams{
+	arq := UpdateCategoryParams{
 		ID:          category1.ID,
 		Title:       util.RandomString(12),
 		Description: util.RandomString(20),
 	}
 
-	category2, err := testQueries.UpdateCategories(context.Background(), arq)
+	category2, err := testQueries.UpdateCategory(context.Background(), arq)
 	require.NoError(t, err)
 	require.NotEmpty(t, category2)
 
@@ -74,22 +74,22 @@ func TestUpdateCategory(t *testing.T) Category {
 func TestListCategories(t *testing.T) Category {
 	lasCategory := createRandomCategory(t)
 
-	arq := CreateCategoryParams{
+	arq := GetCategoriesParams{
 		UserID:      lasCategory.UserID,
 		Type:        lasCategory.Type,
 		Title:       lasCategory.Title,
 		Description: lasCategory.Description,
 	}
 
-	category2, err := testQueries.UpdateCategories(context.Background(), arq)
+	categories, err := testQueries.GetCategory(context.Background(), arq)
 	require.NoError(t, err)
-	require.NotEmpty(t, category2)
+	require.NotEmpty(t, categories)
 
-	for _, category := range categorys {
-		require.Equal(t, lasCategory.ID, category2.ID)
-		require.Equal(t, lasCategory.UserID, category2.UserID)
-		require.Equal(t, lasCategory.Title, category2.Title)
-		require.Equal(t, lasCategory.Description, category2.Description)
+	for _, category := range categories {
+		require.Equal(t, lasCategory.ID, category.ID)
+		require.Equal(t, lasCategory.UserID, category.UserID)
+		require.Equal(t, lasCategory.Title, category.Title)
+		require.Equal(t, lasCategory.Description, category.Description)
 		require.NotEmpty(t, lasCategory.CreatedAt)
 	}
 }
