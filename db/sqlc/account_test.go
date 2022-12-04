@@ -105,6 +105,34 @@ func TestListAccounts(t *testing.T) Account {
 		require.Equal(t, lasAccount.UserID, account.UserID)
 		require.Equal(t, lasAccount.Title, account.Title)
 		require.Equal(t, lasAccount.Description, account.Description)
+		require.Equal(t, lasAccount.Value, account.Value)
 		require.NotEmpty(t, lasAccount.CreatedAt)
+		require.NotEmpty(t, lasAccount.Date)
 	}
+}
+
+func TestListGetReports(t *testing.T) Account {
+	lasAccount := createRandomAccount(t)
+
+	arq := GetAccountsReportsParams{
+		UserID: lasAccount.UserID,
+		Type:   lasAccount.Type,
+	}
+
+	sumValues, err := testQueries.GetAccountsReports(context.Background(), arq)
+	require.NoError(t, err)
+	require.NotEmpty(t, sumValues)
+}
+
+func TestListGetGraph(t *testing.T) Account {
+	lasAccount := createRandomAccount(t)
+
+	arq := GetAccountsGraphParams{
+		UserID: lasAccount.UserID,
+		Type:   lasAccount.Type,
+	}
+
+	graphValue, err := testQueries.GetAccountsGraph(context.Background(), arq)
+	require.NoError(t, err)
+	require.NotEmpty(t, graphValue)
 }
