@@ -11,7 +11,7 @@ import (
 
 func createRandomAccount(t *testing.T) Account {
 	category := createRandomCategory(t)
-	arq := CreateAccountParams{
+	arg := CreateAccountParams{
 		UserID:      category.UserID,
 		CategoryID:  category.ID,
 		Title:       util.RandomString(12),
@@ -21,16 +21,16 @@ func createRandomAccount(t *testing.T) Account {
 		Date:        time.Now(),
 	}
 
-	account, err := testQueries.CreateAccount(context.Background(), arq)
+	account, err := testQueries.CreateAccount(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, account)
 
-	require.Equal(t, arq.UserID, account.UserID)
-	require.Equal(t, arq.CategoryID, account.CategoryID)
-	require.Equal(t, arq.Value, account.Value)
-	require.Equal(t, arq.Title, account.Title)
-	require.Equal(t, arq.Type, account.Type)
-	require.Equal(t, arq.Description, account.Description)
+	require.Equal(t, arg.UserID, account.UserID)
+	require.Equal(t, arg.CategoryID, account.CategoryID)
+	require.Equal(t, arg.Value, account.Value)
+	require.Equal(t, arg.Title, account.Title)
+	require.Equal(t, arg.Type, account.Type)
+	require.Equal(t, arg.Description, account.Description)
 	require.NotEmpty(t, account.CreatedAt)
 	require.NotEmpty(t, account.Date)
 
@@ -66,28 +66,28 @@ func TestDeleteAccount(t *testing.T) {
 func TestUpdateAccount(t *testing.T) Account {
 	account1 := createRandomAccount(t)
 
-	arq := UpdateAccountParams{
+	arg := UpdateAccountParams{
 		ID:          account1.ID,
 		Title:       util.RandomString(12),
 		Description: util.RandomString(20),
 		Value:       15,
 	}
 
-	account2, err := testQueries.UpdateAccount(context.Background(), arq)
+	account2, err := testQueries.UpdateAccount(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, account2)
 
 	require.Equal(t, account1.ID, account2.ID)
-	require.Equal(t, arq.Title, account2.Title)
-	require.Equal(t, arq.Description, account2.Description)
-	require.Equal(t, arq.Value, account2.Value)
+	require.Equal(t, arg.Title, account2.Title)
+	require.Equal(t, arg.Description, account2.Description)
+	require.Equal(t, arg.Value, account2.Value)
 	require.Equal(t, account1.CreatedAt, account2.CreatedAt)
 }
 
 func TestListAccounts(t *testing.T) Account {
 	lasAccount := createRandomAccount(t)
 
-	arq := GetAccountsParams{
+	arg := GetAccountsParams{
 		UserID:      lasAccount.UserID,
 		Type:        lasAccount.Type,
 		CategoryID:  lasAccount.CategoryID,
@@ -96,7 +96,7 @@ func TestListAccounts(t *testing.T) Account {
 		Description: lasAccount.Description,
 	}
 
-	accounts, err := testQueries.GetAccounts(context.Background(), arq)
+	accounts, err := testQueries.GetAccounts(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, accounts)
 
@@ -114,12 +114,12 @@ func TestListAccounts(t *testing.T) Account {
 func TestListGetReports(t *testing.T) Account {
 	lasAccount := createRandomAccount(t)
 
-	arq := GetAccountsReportsParams{
+	arg := GetAccountsReportsParams{
 		UserID: lasAccount.UserID,
 		Type:   lasAccount.Type,
 	}
 
-	sumValues, err := testQueries.GetAccountsReports(context.Background(), arq)
+	sumValues, err := testQueries.GetAccountsReports(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, sumValues)
 }
@@ -127,12 +127,12 @@ func TestListGetReports(t *testing.T) Account {
 func TestListGetGraph(t *testing.T) Account {
 	lasAccount := createRandomAccount(t)
 
-	arq := GetAccountsGraphParams{
+	arg := GetAccountsGraphParams{
 		UserID: lasAccount.UserID,
 		Type:   lasAccount.Type,
 	}
 
-	graphValue, err := testQueries.GetAccountsGraph(context.Background(), arq)
+	graphValue, err := testQueries.GetAccountsGraph(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, graphValue)
 }
