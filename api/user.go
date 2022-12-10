@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 
 	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
@@ -39,15 +40,44 @@ type GetUserRequest struct {
 }
 
 func (server *Server) GetUser(ctx *gin.Context) {
-	var req createUserRequest
+	var req GetUserRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusNotFound, erroResponse(err))
 	}
 
-	user, err := server.store.GetUser(ctx, arg)
+	user, err := server.store.GetUser(ctx, req.Username)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, erroResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
+}
+
+type GetUserByIdRequest struct {
+	Username int32 `uri:"id" binding:"required"`
+}
+
+func (server *Server) GetUserById(ctx *gin.Context) {
+	var req GetUserByIdRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, erroResponse(err))
+	}
+
+	user, err := server.store.GetUserById(ctx, req.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, erroResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
 	}
 
 	ctx.JSON(http.StatusOK, user)
