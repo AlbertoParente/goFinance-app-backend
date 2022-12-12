@@ -10,4 +10,10 @@ migrationUp:
 migrationDrop:
 	migrate -path db/migration -database "postgresql://postgres:postgres@localhost:5432/go_finance?sslmode=disable" -verbose drop
 
-.PHONY: createDb postgres
+test:
+	go test -v -cover ./...
+
+server:
+	go run main.go
+
+.PHONY: createDb postgres dropdb migrateup migrationdrop test server
