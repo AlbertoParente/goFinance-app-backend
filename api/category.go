@@ -30,26 +30,3 @@ func (server *Server) createCategory(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, user)
 }
-
-type GetCategoryRequest struct {
-	Category string `uri:"category" binding:"required"`
-}
-
-func (server *Server) GetCategory(ctx *gin.Context) {
-	var req GetCategoryRequest
-	err := ctx.ShouldBindUri(&req)
-	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
-	}
-
-	user, err := server.store.GetCategory(ctx, req.Username)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, erroResponse(err))
-			return
-		}
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-	ctx.JSON(http.StatusOK, user)
-}
