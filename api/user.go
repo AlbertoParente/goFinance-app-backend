@@ -27,7 +27,7 @@ func (server *Server) createUser(ctx *gin.Context) {
 		Email:    req.Email,
 	}
 
-	user, err := server.store.CreateUser(ctx, arg)
+	user, err := server.store.createUser(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 	}
@@ -35,18 +35,18 @@ func (server *Server) createUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
-type GetUserRequest struct {
+type getUserRequest struct {
 	Username string `uri:"username" binding:"required"`
 }
 
-func (server *Server) GetUser(ctx *gin.Context) {
-	var req GetUserRequest
+func (server *Server) getUser(ctx *gin.Context) {
+	var req getUserRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, erroResponse(err))
 	}
 
-	user, err := server.store.GetUser(ctx, req.Username)
+	user, err := server.store.getUser(ctx, req.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, erroResponse(err))
@@ -59,18 +59,18 @@ func (server *Server) GetUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
-type GetUserByIdRequest struct {
+type getUserByIdRequest struct {
 	Username int32 `uri:"id" binding:"required"`
 }
 
-func (server *Server) GetUserById(ctx *gin.Context) {
-	var req GetUserByIdRequest
+func (server *Server) getUserById(ctx *gin.Context) {
+	var req getUserByIdRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, erroResponse(err))
 	}
 
-	user, err := server.store.GetUserById(ctx, req.ID)
+	user, err := server.store.getUserById(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, erroResponse(err))

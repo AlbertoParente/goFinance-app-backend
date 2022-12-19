@@ -4,28 +4,55 @@ import (
 	"database/sql"
 	"net/http"
 
-	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
 	"github.com/gin-gonic/gin"
 )
 
 type createCategoryRequest struct {
-	Category string `json:"category"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
 }
 
 func (server *Server) createCategory(ctx *gin.Context) {
-	var req createUserRequest
+	var req createCategoryRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 	}
 
-	arg := db.CreateCategoryParams{
-		Category: req.Category,
+	arg := db.createCategoryParams{
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
 	}
 
-	user, err := server.store.CreateCategory(ctx, arg)
+	user, err := server.store.createCategory(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	ctx.JSON(http.StatusOK, user)
+}
+
+type getUserRequest struct {
+	Username string `uri:"username" binding:"required"`
+}
+
+func (server *Server) GetUser(ctx *gin.Context) {
+	var req getUserRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, erroResponse(err))
+	}
+
+	user, err := server.store.GetUser(ctx, req.Username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, erroResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
 	}
 
 	ctx.JSON(http.StatusOK, user)
