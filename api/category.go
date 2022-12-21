@@ -29,12 +29,12 @@ func (server *Server) createCategory(ctx *gin.Context) {
 		Description: req.Description,
 	}
 
-	user, err := server.store.CreateCategory(ctx, arg)
+	category, err := server.store.CreateCategory(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, category)
 }
 
 type getCategoryRequest struct {
@@ -48,7 +48,7 @@ func (server *Server) GetCategory(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, erroResponse(err))
 	}
 
-	user, err := server.store.GetCategory(ctx, req.ID)
+	category, err := server.store.GetCategory(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, erroResponse(err))
@@ -58,7 +58,7 @@ func (server *Server) GetCategory(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, category)
 }
 
 type deleteCategoryRequest struct {
@@ -79,4 +79,31 @@ func (server *Server) deleteUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, true)
+}
+
+type updateCategoryRequest struct {
+	ID          int32  `json:"id" binding:"required"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+}
+
+func (server *Server) updateCategory(ctx *gin.Context) {
+	var req updateCategoryRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	}
+
+	arg := db.UpdateCategoryParams{
+		ID:          req.ID,
+		Title:       req.Title,
+		Description: req.Description,
+	}
+
+	category, err := server.store.UpdateCategories(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	ctx.JSON(http.StatusOK, category)
 }
