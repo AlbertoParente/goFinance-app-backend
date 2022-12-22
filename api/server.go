@@ -17,8 +17,10 @@ func newServer(store *db.Store) *Server {
 	router.POST("/user", server.createUser)
 	router.GET("/user/:username", server.getUser)
 	router.GET("/user/id/:id", server.getUserById)
-	router.GET("/category", server.createCategory)
+
+	router.POST("/category", server.createCategory)
 	router.GET("/category/id/:id", server.getCategory)
+	router.GET("/category", server.getCategories)
 	router.DELETE("/category/:id", server.deleteCategory)
 	router.PUT("/category/:id", server.updateCategory)
 
