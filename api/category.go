@@ -65,7 +65,7 @@ type deleteCategoryRequest struct {
 	ID int32 `uri:"id" binding:"required"`
 }
 
-func (server *Server) deleteUser(ctx *gin.Context) {
+func (server *Server) deleteCategory(ctx *gin.Context) {
 	var req deleteCategoryRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
