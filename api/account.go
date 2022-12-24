@@ -3,16 +3,20 @@ package api
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
 	db "github.com/albertoparente/go-finance-app/db/sqlc"
 	"github.com/gin-gonic/gin"
 )
 
 type createAccountRequest struct {
-	UserID      int32  `json:"user_id" binding:"required"`
-	Title       string `json:"title" binding:"required"`
-	Type        string `json:"type" binding:"required"`
-	Description string `json:"description" binding:"required"`
+	UserID      int32     `json:"user_id" binding:"required"`
+	CategoryID  int32     `json:"category_id" binding:"required"`
+	Title       string    `json:"title" binding:"required"`
+	Type        string    `json:"type" binding:"required"`
+	Description string    `json:"description" binding:"required"`
+	Value       int32     `json:"value"`
+	Date        time.Time `json:"date"`
 }
 
 func (server *Server) createAccount(ctx *gin.Context) {
@@ -24,9 +28,12 @@ func (server *Server) createAccount(ctx *gin.Context) {
 
 	arg := db.CreateAccountParams{
 		UserID:      req.UserID,
+		CategoryID:  req.CategoryID,
 		Title:       req.Title,
 		Type:        req.Type,
 		Description: req.Description,
+		Value:       req.Value,
+		Date:        req.Date,
 	}
 
 	Account, err := server.store.CreateAccount(ctx, arg)
@@ -72,7 +79,7 @@ func (server *Server) deleteAccount(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, erroResponse(err))
 	}
 
-	err = server.store.DeleteAccounts(ctx, req.ID)
+	err = server.store.DeleteAccount(ctx, req.ID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -82,8 +89,10 @@ func (server *Server) deleteAccount(ctx *gin.Context) {
 }
 
 type updateAccountRequest struct {
-	ID    int32  `json:"id" binding:"required"`
-	Title string `json:"title" binding:"required"`
+	ID          int32  `json:"id" binding:"required"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Value       int32  `json:"value"`
 }
 
 func (server *Server) updateAccount(ctx *gin.Context) {
@@ -94,11 +103,13 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 	}
 
 	arg := db.UpdateAccountParams{
-		ID:    req.ID,
-		Title: req.Title,
+		ID:          req.ID,
+		Title:       req.Title,
+		Description: req.Description,
+		Value:       req.Value,
 	}
 
-	account, err := server.store.UpdateAccounts(ctx, arg)
+	account, err := server.store.UpdateAccount(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 	}

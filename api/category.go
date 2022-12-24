@@ -10,9 +10,8 @@ import (
 
 type createCategoryRequest struct {
 	UserID      int32  `json:"user_id" binding:"required"`
-	Title       string `json:"title" binding:"required"`
-	Type        string `json:"type" binding:"required"`
-	Description string `json:"description" binding:"required"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 func (server *Server) createCategory(ctx *gin.Context) {
@@ -25,7 +24,6 @@ func (server *Server) createCategory(ctx *gin.Context) {
 	arg := db.CreateCategoryParams{
 		UserID:      req.UserID,
 		Title:       req.Title,
-		Type:        req.Type,
 		Description: req.Description,
 	}
 
