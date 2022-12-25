@@ -107,15 +107,15 @@ func (server *Server) updateCategory(ctx *gin.Context) {
 }
 
 type getCategoriesRequest struct {
-	UserID      int32  `json:"user_id" binding:"required`
-	Type        string `json:"type" binding:"required`
+	UserID      int32  `json:"user_id"`
+	Type        string `json:"type"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
 
 func (server *Server) GetCategory(ctx *gin.Context) {
 	var req getCategoriesRequest
-	err := ctx.ShouldBindUri(&req)
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, erroResponse(err))
 	}
