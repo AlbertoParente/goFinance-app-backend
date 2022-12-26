@@ -150,3 +150,29 @@ func (server *Server) GetAccount(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, accounts)
 }
+
+type getAccountGraphRequest struct {
+	UserID int32 `uri:"user_id" binding:"required"`
+	Type   int32 `uri:"type" binding:"required"`
+}
+
+func (server *Server) GetAccountGraph(ctx *gin.Context) {
+	var req getAccountGraphRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, erroResponse(err))
+	}
+
+	arg := db.GetAccountsGraphParams{
+		UserID: req.UserID,
+		Type:   req.Type,
+	}
+
+	countGraph, err := server.store.GetAccountsGraph(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, countGraph)
+}
