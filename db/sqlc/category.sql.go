@@ -46,18 +46,20 @@ func (q *Queries) CreateCategory(ctx context.Context, arg CreateCategoryParams) 
 	return i, err
 }
 
-const delereCategory = `-- name: DelereCategory :exec
-DELETE FROM categories 
+const deleteCategory = `-- name: DeleteCategory :exec
+DELETE 
+FROM categories 
 WHERE id = $1
 `
 
-func (q *Queries) DelereCategory(ctx context.Context, id int32) error {
-	_, err := q.db.ExecContext(ctx, delereCategory, id)
+func (q *Queries) DeleteCategory(ctx context.Context, id int32) error {
+	_, err := q.db.ExecContext(ctx, deleteCategory, id)
 	return err
 }
 
 const getCategories = `-- name: GetCategories :many
-SELECT id, user_id, title, type, description, created_at FROM categories 
+SELECT id, user_id, title, type, description, created_at 
+FROM categories 
 WHERE user_id = $1 
   AND type = $2 
   AND title LIKE $3 
@@ -107,7 +109,8 @@ func (q *Queries) GetCategories(ctx context.Context, arg GetCategoriesParams) ([
 }
 
 const getCategory = `-- name: GetCategory :one
-SELECT id, user_id, title, type, description, created_at FROM categories 
+SELECT id, user_id, title, type, description, created_at 
+FROM categories 
 WHERE id = $1 LIMIT 1
 `
 

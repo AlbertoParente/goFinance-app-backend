@@ -48,7 +48,7 @@ func TestGetCategory(t *testing.T) {
 
 func TestDeleteCategory(t *testing.T) {
 	category := createRandomCategory(t)
-	err := testQueries.DelereCategory(context.Background(), category.ID)
+	err := testQueries.DeleteCategory(context.Background(), category.ID)
 	require.NoError(t, err)
 }
 
@@ -61,7 +61,7 @@ func TestUpdateCategory(t *testing.T) {
 		Description: util.RandomString(20),
 	}
 
-	category2, err := testQueries.UpdateCategories(context.Background(), arg)
+	category2, err := testQueries.UpdateCategory(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, category2)
 
