@@ -27,7 +27,7 @@ SELECT a.id,
        a.created_at,
        c.title AS category_title
 FROM accounts a
-  LEFT JOIN categories c ON c.id = a.category_id 
+  LEFT JOIN categories c ON a.category_id = c.id
 WHERE a.user_id = $1 
   AND a.type = $2
   AND a.category_id = $3 
