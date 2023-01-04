@@ -27,7 +27,7 @@ func newServer(store *db.Store) *Server {
 	router.POST("/account", server.createAccount)
 	router.GET("/account/id/:id", server.getAccount)
 	router.GET("/account", server.getAccounts)
-	router.GET("/account/id", server.getAccountGraphRequest)
+	router.GET("/account/id", server.getAccountGraph)
 	router.DELETE("/account/:id", server.deleteAccount)
 	router.PUT("/account/:id", server.updateAccount)
 

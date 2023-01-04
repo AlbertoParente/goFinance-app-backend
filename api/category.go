@@ -39,7 +39,7 @@ type getCategoryRequest struct {
 	ID int32 `uri:"id" binding:"required"`
 }
 
-func (server *Server) GetCategory(ctx *gin.Context) {
+func (server *Server) getCategory(ctx *gin.Context) {
 	var req getCategoryRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -113,7 +113,7 @@ type getCategoriesRequest struct {
 	Description string `json:"description"`
 }
 
-func (server *Server) GetCategory(ctx *gin.Context) {
+func (server *Server) getCategories(ctx *gin.Context) {
 	var req getCategoriesRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {

@@ -48,7 +48,7 @@ type getAccountRequest struct {
 	ID int32 `uri:"id" binding:"required"`
 }
 
-func (server *Server) GetAccount(ctx *gin.Context) {
+func (server *Server) getAccount(ctx *gin.Context) {
 	var req getAccountRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -126,7 +126,7 @@ type getAccountsRequest struct {
 	Date        time.Time `json:"date"`
 }
 
-func (server *Server) GetAccount(ctx *gin.Context) {
+func (server *Server) getAccounts(ctx *gin.Context) {
 	var req getAccountsRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -156,7 +156,7 @@ type getAccountGraphRequest struct {
 	Type   int32 `uri:"type" binding:"required"`
 }
 
-func (server *Server) GetAccountGraph(ctx *gin.Context) {
+func (server *Server) getAccountGraph(ctx *gin.Context) {
 	var req getAccountGraphRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
