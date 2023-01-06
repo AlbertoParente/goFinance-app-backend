@@ -10,7 +10,7 @@ type Server struct {
 	router *gin.Engine
 }
 
-func newServer(store *db.Store) *Server {
+func NewServer(store *db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 

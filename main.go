@@ -1,11 +1,14 @@
 package main
 
 import (
-	// "database/sql"
-	// "log"
+	"database/sql"
+	"log"
+	"os"
 
+	"github.com/AlbertoParente/go-finance-app/api"
+	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	// db "github.com/AlbertoParente/go-finance-app/db/sqlc"
 )
 
 const (
@@ -15,16 +18,25 @@ const (
 )
 
 func main() {
-	// conn, err := sql.Open(dbDriver, dbSource)
-	// if err != nil {
-	// 	log.Fatal("Cannot connect to db: ", err)
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	// store := db.NewStore(conn)
-	// server := api.newServer(store)
+	dbDriver := os.Getenv("DB_DRIVER")
+	dbSource := os.Getenv("DB_SOURCE")
+	serverAddress := os.Getenv("SERVER_ADDRESS")
 
-	// err = server.Start(serverAddress)
-	// if err != nil {
-	// 	log.Fatal("Cannot start api: ", err)
-	// }
+	conn, err := sql.Open(dbDriver, dbSource)
+	if err != nil {
+		log.Fatal("Cannot connect to db: ", err)
+	}
+
+	store := db.NewStore(conn)
+	server := api.NewServer(store)
+
+	err = server.Start(serverAddress)
+	if err != nil {
+		log.Fatal("Cannot start api: ", err)
+	}
 }
