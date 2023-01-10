@@ -84,6 +84,54 @@ WHERE a.user_id = $1
   AND a.title like $4
   AND a.description like $5;
 
+-- name: GetAccountsByUserIdAndTypeAndTitle :many
+SELECT a.id,
+       a.user_id,
+       a.title,
+       a.type,
+       a.description,
+       a.value,
+       a.date,
+       a.created_at,
+       c.title AS category_title
+FROM accounts a
+  LEFT JOIN categories c ON a.category_id = c.id
+WHERE a.user_id = $1 
+  AND a.type = $2;
+  AND a.title like $3;
+
+-- name: GetAccountsByUserIdAndTypeAndDescription :many
+SELECT a.id,
+       a.user_id,
+       a.title,
+       a.type,
+       a.description,
+       a.value,
+       a.date,
+       a.created_at,
+       c.title AS category_title
+FROM accounts a
+  LEFT JOIN categories c ON a.category_id = c.id
+WHERE a.user_id = $1 
+  AND a.type = $2;
+  AND a.description like $3;
+
+-- name: GetAccountsByUserIdAndTypeAndDate :many
+SELECT a.id,
+       a.user_id,
+       a.title,
+       a.type,
+       a.description,
+       a.value,
+       a.date,
+       a.created_at,
+       c.title AS category_title
+FROM accounts a
+  LEFT JOIN categories c ON a.category_id = c.id
+WHERE a.user_id = $1 
+  AND a.type = $2;
+  AND a.date like $3;
+
 -- name: GetAccountsReports :one
 SELECT SUM(value) AS sum_values 
 FROM accounts
