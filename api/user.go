@@ -54,13 +54,13 @@ func (server *Server) getUser(ctx *gin.Context) {
 	var req getUserRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	user, err := server.store.getUser(ctx, req.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, erroResponse(err))
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
@@ -78,13 +78,13 @@ func (server *Server) getUserById(ctx *gin.Context) {
 	var req getUserByIdRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	user, err := server.store.getUserById(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, erroResponse(err))
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))

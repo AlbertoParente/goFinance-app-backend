@@ -43,13 +43,13 @@ func (server *Server) getCategory(ctx *gin.Context) {
 	var req getCategoryRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	category, err := server.store.GetCategory(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, erroResponse(err))
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
@@ -67,7 +67,7 @@ func (server *Server) deleteCategory(ctx *gin.Context) {
 	var req deleteCategoryRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	err = server.store.DeleteCategories(ctx, req.ID)
@@ -117,7 +117,7 @@ func (server *Server) getCategories(ctx *gin.Context) {
 	var req getCategoriesRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	arg := db.GetCategoriesParams{

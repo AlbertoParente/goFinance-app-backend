@@ -34,14 +34,14 @@ WHERE user_id = $1
   AND type = $2 
   AND title LIKE $3; 
 
--- name: UpdateCategory :one
+-- name: UpdateCategories :one
 UPDATE categories 
 SET title = $2, 
     description = $3 
 WHERE id = $1 
 RETURNING *;
 
--- name: DeleteCategory :exec
+-- name: DeleteCategories :exec
 DELETE 
 FROM categories 
 WHERE id = $1;

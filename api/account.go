@@ -29,7 +29,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	var categoryId = req.CategoryID
 	var accountType = req.Type
 
-	category, err := server.store.GetCategory(ctx, categoryId)
+	category, err := server.store.GetCategories(ctx, categoryId)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
@@ -65,13 +65,13 @@ func (server *Server) getAccount(ctx *gin.Context) {
 	var req getAccountRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	account, err := server.store.GetAccount(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, erroResponse(err))
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
@@ -89,7 +89,7 @@ func (server *Server) deleteAccount(ctx *gin.Context) {
 	var req deleteAccountRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	err = server.store.DeleteAccount(ctx, req.ID)
@@ -143,7 +143,7 @@ func (server *Server) getAccounts(ctx *gin.Context) {
 	var req getAccountsRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	arg := db.GetAccountsParams{
@@ -173,7 +173,7 @@ func (server *Server) getAccountGraph(ctx *gin.Context) {
 	var req getAccountGraphRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	arg := db.GetAccountsGraphParams{
@@ -195,11 +195,11 @@ type getAccountReportsRequest struct {
 	Type   int32 `uri:"type" binding:"required"`
 }
 
-func (server *Server) getAccountGraph(ctx *gin.Context) {
+func (server *Server) getAccountReports(ctx *gin.Context) {
 	var req getAccountGraphRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, erroResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
 	arg := db.GetAccountsReportsParams{

@@ -40,6 +40,6 @@ func (server *Server) Start(address string) error {
 	return server.router.Run(address)
 }
 
-func erroResponse(err error) gin.H {
+func errorResponse(err error) gin.H {
 	return gin.H("api has error:", err.Error())
 }

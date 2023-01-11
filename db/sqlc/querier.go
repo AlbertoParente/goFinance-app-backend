@@ -13,17 +13,25 @@ type Querier interface {
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (Category, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteAccount(ctx context.Context, id int32) error
-	DeleteCategory(ctx context.Context, id int32) error
+	DeleteCategories(ctx context.Context, id int32) error
 	GetAccount(ctx context.Context, id int32) (Account, error)
 	GetAccounts(ctx context.Context, arg GetAccountsParams) ([]GetAccountsRow, error)
+	GetAccountsByUserIdAndType(ctx context.Context, arg GetAccountsByUserIdAndTypeParams) ([]GetAccountsByUserIdAndTypeRow, error)
+	GetAccountsByUserIdAndTypeAndCategoryId(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdRow, error)
+	GetAccountsByUserIdAndTypeAndCategoryIdAndTitle(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdAndTitleParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdAndTitleRow, error)
+	GetAccountsByUserIdAndTypeAndDate(ctx context.Context, arg GetAccountsByUserIdAndTypeAndDateParams) ([]GetAccountsByUserIdAndTypeAndDateRow, error)
+	GetAccountsByUserIdAndTypeAndDescription(ctx context.Context, arg GetAccountsByUserIdAndTypeAndDescriptionParams) ([]GetAccountsByUserIdAndTypeAndDescriptionRow, error)
+	GetAccountsByUserIdAndTypeAndTitle(ctx context.Context, arg GetAccountsByUserIdAndTypeAndTitleParams) ([]GetAccountsByUserIdAndTypeAndTitleRow, error)
 	GetAccountsGraph(ctx context.Context, arg GetAccountsGraphParams) (int64, error)
 	GetAccountsReports(ctx context.Context, arg GetAccountsReportsParams) (int64, error)
 	GetCategories(ctx context.Context, arg GetCategoriesParams) ([]Category, error)
+	GetCategoriesByUserIdAndType(ctx context.Context, arg GetCategoriesByUserIdAndTypeParams) ([]Category, error)
+	GetCategoriesByUserIdAndTypeAnDescription(ctx context.Context, arg GetCategoriesByUserIdAndTypeAnDescriptionParams) ([]Category, error)
 	GetCategory(ctx context.Context, id int32) (Category, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	GetUserById(ctx context.Context, id int32) (User, error)
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
-	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error)
+	UpdateCategories(ctx context.Context, arg UpdateCategoriesParams) (Category, error)
 }
 
 var _ Querier = (*Queries)(nil)
