@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
 	db "github.com/albertoparente/go-finance-app/db/sqlc"
 	"github.com/gin-gonic/gin"
 )
@@ -120,17 +121,37 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}
 
-	arg := db.GetCategoriesParams{
-		UserID:      req.UserID,
-		Title:       req.Title,
-		Type:        req.Type,
-		Description: req.Description,
+	var categories []db.Category
+
+	if len(req.Description) == 0 && len(req.Title) == 0 {
+		arg := db.GetCategoriesByUserIdAndTypeParams{
+			UserID: req.UserID,
+			Type:   req.Type,
+		}
+
+		categoriesByUserIdAndType, err := server.store.GetCategories(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		categories = categoriesByUserIdAndType
 	}
 
-	categories, err := server.store.GetCategories(ctx, arg)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
+	if len(req.Title) == 0 && len(req.Description) > 0 {
+		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
+			UserID:      req.UserID,
+			Type:        req.Type,
+			Description: req.Description,
+		}
+
+		categoriesByUserIdAndTypeAnDescription, err := server.store.GetCategories(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+
+		categories = categoriesByUserIdAndTypeAnDescription
 	}
 
 	ctx.JSON(http.StatusOK, categories)
