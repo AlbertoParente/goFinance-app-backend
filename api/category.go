@@ -134,7 +134,6 @@ func (server *Server) getCategories(ctx *gin.Context) {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
-
 		categories = categoriesByUserIdAndType
 	}
 
@@ -150,7 +149,20 @@ func (server *Server) getCategories(ctx *gin.Context) {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
+		categories = categoriesByUserIdAndTypeAnDescription
+	}
 
+	if len(req.Title) == 0 && len(req.Description) > 0 {
+		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
+			UserID: req.UserID,
+			Type:   req.Type,
+		}
+
+		categoriesByUserIdAndTypeAnDescription, err := server.store.GetCategories(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
 		categories = categoriesByUserIdAndTypeAnDescription
 	}
 
