@@ -144,7 +144,7 @@ func (server *Server) getCategories(ctx *gin.Context) {
 			Description: req.Description,
 		}
 
-		categoriesByUserIdAndTypeAnDescription, err := server.store.GetCategories(ctx, arg)
+		categoriesByUserIdAndTypeAnDescription, err := server.store.GetCategoriesByUserIdAndTypeAnDescription(ctx, arg)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -152,18 +152,35 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		categories = categoriesByUserIdAndTypeAnDescription
 	}
 
-	if len(req.Title) == 0 && len(req.Description) > 0 {
-		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
+	if len(req.Title) > 0 && len(req.Description) == 0 {
+		arg := db.GetCategoriesByUserIdAndTypeAndTitleParams{
 			UserID: req.UserID,
 			Type:   req.Type,
+			Title:  req, Title,
 		}
 
-		categoriesByUserIdAndTypeAnDescription, err := server.store.GetCategories(ctx, arg)
+		categoriesByUserIdAndTypeAndTitle, err := server.store.GetCategoriesByUserIdAndTypeAndTitle(ctx, arg)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
-		categories = categoriesByUserIdAndTypeAnDescription
+		categories = categoriesByUserIdAndTypeAndTitle
+	}
+
+	if len(req.Title) > 0 && len(req.Description) > 0 {
+		arg := db.GetCategoriesParams{
+			UserID: req.UserID,
+			Type:   req.Type,
+			Title:  req, Title,
+			Description: req.Description,
+		}
+
+		categoriesAllFilteres, err := server.store.GetCategories(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+		categories = categoriesAllFilteres
 	}
 
 	ctx.JSON(http.StatusOK, categories)
