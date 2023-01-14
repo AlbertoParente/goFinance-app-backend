@@ -123,7 +123,8 @@ func (server *Server) getCategories(ctx *gin.Context) {
 
 	var categories []db.Category
 
-	if len(req.Description) == 0 && len(req.Title) == 0 {
+	filterAsByUserIdAnType := len(req.Description) == 0 && len(req.Title) == 0 && req.UserID > 0 && len(req.Type) > 0
+	filterAsByUserIdAnType {
 		arg := db.GetCategoriesByUserIdAndTypeParams{
 			UserID: req.UserID,
 			Type:   req.Type,
@@ -137,7 +138,8 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		categories = categoriesByUserIdAndType
 	}
 
-	if len(req.Title) == 0 && len(req.Description) > 0 {
+	filterAsByUserIdAndTypeAndDescription := len(req.Title) == 0 && len(req.Description) > 0 && req.UserID > 0 && len(req.Type) > 0
+	if filterAsByUserIdAndTypeAndDescription {
 		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
 			UserID:      req.UserID,
 			Type:        req.Type,
@@ -152,7 +154,8 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		categories = categoriesByUserIdAndTypeAnDescription
 	}
 
-	if len(req.Title) > 0 && len(req.Description) == 0 {
+	filterAsByUserIdAndTypeAndTitle := len(req.Title) > 0 && len(req.Description) == 0 && req.UserID > 0 && len(req.Type) > 0
+	if filterAsByUserIdAndTypeAndTitle {
 		arg := db.GetCategoriesByUserIdAndTypeAndTitleParams{
 			UserID: req.UserID,
 			Type:   req.Type,
@@ -166,8 +169,9 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		}
 		categories = categoriesByUserIdAndTypeAndTitle
 	}
-
-	if len(req.Title) > 0 && len(req.Description) > 0 {
+	
+	filterAsAllParameters := len(req.Title) > 0 && len(req.Description) > 0 && req.UserID > 0 && len(req.Type) > 0
+	if filterAsAllParameters {
 		arg := db.GetCategoriesParams{
 			UserID: req.UserID,
 			Type:   req.Type,
@@ -175,12 +179,12 @@ func (server *Server) getCategories(ctx *gin.Context) {
 			Description: req.Description,
 		}
 
-		categoriesAllFilteres, err := server.store.GetCategories(ctx, arg)
+		categoriesWithAllFilteres, err := server.store.GetCategories(ctx, arg)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
-		categories = categoriesAllFilteres
+		categories = categoriesWithAllFilteres
 	}
 
 	ctx.JSON(http.StatusOK, categories)
