@@ -1,50 +1,49 @@
-// package api
+package api
 
-// import (
-// 	"bytes"
-// 	"crypto/sha512"
-// 	"database/sql"
-// 	"net/http"
+import (
+	"bytes"
+	"crypto/sha512"
+	"net/http"
 
-// 	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
-// 	"github.com/gin-gonic/gin"
-// 	"golang.org/x/crypto/bcrypt"
-// )
+	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+)
 
-// type createUserRequest struct {
-// 	Username string `json:"username"`
-// 	Password string `json:"password"`
-// 	Email    string `json:"email"`
-// }
+type createUserRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+}
 
-// func (server *Server) createUser(ctx *gin.Context) {
-// 	var req createUserRequest
-// 	err := ctx.ShouldBindJSON(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 	}
+func (server *Server) createUser(ctx *gin.Context) {
+	var req createUserRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	}
 
-// 	hashedInput := sha512.Sum512_256([]byte(req.Password))
-// 	trimmedHash := bytes.Trim(hashedInput[:], "\x00")
-// 	preparedPassword := string(trimmedHash)
-// 	passwordHashedInBytes, err := bcrypt.GenerateFromPassword([]byte(preparedPassword), bcrypt.DefaultCost)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-// 	}
-// 	var passwordHashed = string(passwordHashedInBytes)
-// 	arg := db.CreateUserParams{
-// 		Username: req.Username,
-// 		Password: passwordHashed,
-// 		Email:    req.Email,
-// 	}
+	hashedInput := sha512.Sum512_256([]byte(req.Password))
+	trimmedHash := bytes.Trim(hashedInput[:], "\x00")
+	preparedPassword := string(trimmedHash)
+	passwordHashedInBytes, err := bcrypt.GenerateFromPassword([]byte(preparedPassword), bcrypt.DefaultCost)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+	var passwordHashed = string(passwordHashedInBytes)
+	arg := db.CreateUserParams{
+		Username: req.Username,
+		Password: passwordHashed,
+		Email:    req.Email,
+	}
 
-// 	user, err := server.store.createUser(ctx, arg)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-// 	}
+	user, err := server.store.createUser(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
 
-// 	ctx.JSON(http.StatusOK, user)
-// }
+	ctx.JSON(http.StatusOK, user)
+}
 
 // type getUserRequest struct {
 // 	Username string `uri:"username" binding:"required"`
