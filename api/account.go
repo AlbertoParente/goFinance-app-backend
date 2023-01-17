@@ -1,217 +1,220 @@
-// package api
+package api
 
-// import (
-// 	"database/sql"
-// 	"net/http"
-// 	"time"
+import (
+	"database/sql"
+	"net/http"
+	"time"
 
-// 	db "github.com/albertoparente/go-finance-app/db/sqlc"
-// 	"github.com/gin-gonic/gin"
-// )
+	db "github.com/albertoparente/go-finance-app/db/sqlc"
+	"github.com/gin-gonic/gin"
+)
 
-// type createAccountRequest struct {
-// 	UserID      int32     `json:"user_id" binding:"required"`
-// 	CategoryID  int32     `json:"category_id" binding:"required"`
-// 	Title       string    `json:"title" binding:"required"`
-// 	Type        string    `json:"type" binding:"required"`
-// 	Description string    `json:"description" binding:"required"`
-// 	Value       int32     `json:"value"`
-// 	Date        time.Time `json:"date"`
-// }
+type createAccountRequest struct {
+	UserID      int32     `json:"user_id" binding:"required"`
+	CategoryID  int32     `json:"category_id" binding:"required"`
+	Title       string    `json:"title" binding:"required"`
+	Type        string    `json:"type" binding:"required"`
+	Description string    `json:"description" binding:"required"`
+	Value       int32     `json:"value"`
+	Date        time.Time `json:"date"`
+}
 
-// func (server *Server) createAccount(ctx *gin.Context) {
-// 	var req createAccountRequest
-// 	err := ctx.ShouldBindJSON(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 	}
+func (server *Server) createAccount(ctx *gin.Context) {
+	var req createAccountRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	}
 
-// 	var categoryId = req.CategoryID
-// 	var accountType = req.Type
+	var categoryId = req.CategoryID
+	var accountType = req.Type
 
-// 	category, err := server.store.GetCategories(ctx, categoryId)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusNotFound, errorResponse(err))
-// 	}
+	category, err := server.store.GetCategories(ctx, categoryId)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+	}
 
-// 	var categoryTypeIsDifferentOfAccountType = category.Type != accountType
-// 	if categoryTypeIsDifferentOfAccountType {
-// 		ctx.JSON(http.StatusBadRequest, "Account type is differnt of Category type")
-// 	} else {
-// 		arg := db.CreateAccountParams{
-// 			UserID:      req.UserID,
-// 			CategoryID:  req.CategoryID,
-// 			Title:       req.Title,
-// 			Type:        req.Type,
-// 			Description: req.Description,
-// 			Value:       req.Value,
-// 			Date:        req.Date,
-// 		}
+	var categoryTypeIsDifferentOfAccountType = category.Type != accountType
+	if categoryTypeIsDifferentOfAccountType {
+		ctx.JSON(http.StatusBadRequest, "Account type is differnt of Category type")
+	} else {
+		arg := db.CreateAccountParams{
+			UserID:      req.UserID,
+			CategoryID:  req.CategoryID,
+			Title:       req.Title,
+			Type:        req.Type,
+			Description: req.Description,
+			Value:       req.Value,
+			Date:        req.Date,
+		}
 
-// 		account, err := server.store.CreateAccount(ctx, arg)
-// 		if err != nil {
-// 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-// 		}
+		account, err := server.store.CreateAccount(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		}
 
-// 		ctx.JSON(http.StatusOK, account)
-// 	}
-// }
+		ctx.JSON(http.StatusOK, account)
+	}
+}
 
-// type getAccountRequest struct {
-// 	ID int32 `uri:"id" binding:"required"`
-// }
+type getAccountRequest struct {
+	ID int32 `uri:"id" binding:"required"`
+}
 
-// func (server *Server) getAccount(ctx *gin.Context) {
-// 	var req getAccountRequest
-// 	err := ctx.ShouldBindUri(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusNotFound, errorResponse(err))
-// 	}
+func (server *Server) getAccount(ctx *gin.Context) {
+	var req getAccountRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+	}
 
-// 	account, err := server.store.GetAccount(ctx, req.ID)
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			ctx.JSON(http.StatusNotFound, errorResponse(err))
-// 			return
-// 		}
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 		return
-// 	}
+	account, err := server.store.GetAccount(ctx, req.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, account)
-// }
+	ctx.JSON(http.StatusOK, account)
+}
 
-// type deleteAccountRequest struct {
-// 	ID int32 `uri:"id" binding:"required"`
-// }
+type deleteAccountRequest struct {
+	ID int32 `uri:"id" binding:"required"`
+}
 
-// func (server *Server) deleteAccount(ctx *gin.Context) {
-// 	var req deleteAccountRequest
-// 	err := ctx.ShouldBindUri(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusNotFound, errorResponse(err))
-// 	}
+func (server *Server) deleteAccount(ctx *gin.Context) {
+	var req deleteAccountRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+	}
 
-// 	err = server.store.DeleteAccount(ctx, req.ID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 		return
-// 	}
+	err = server.store.DeleteAccount(ctx, req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, true)
-// }
+	ctx.JSON(http.StatusOK, true)
+}
 
-// type updateAccountRequest struct {
-// 	ID          int32  `json:"id" binding:"required"`
-// 	Title       string `json:"title"`
-// 	Description string `json:"description"`
-// 	Value       int32  `json:"value"`
-// }
+type updateAccountRequest struct {
+	ID          int32  `json:"id" binding:"required"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Value       int32  `json:"value"`
+}
 
-// func (server *Server) updateAccount(ctx *gin.Context) {
-// 	var req updateAccountRequest
-// 	err := ctx.ShouldBindJSON(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 	}
+func (server *Server) updateAccount(ctx *gin.Context) {
+	var req updateAccountRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	}
 
-// 	arg := db.UpdateAccountParams{
-// 		ID:          req.ID,
-// 		Title:       req.Title,
-// 		Description: req.Description,
-// 		Value:       req.Value,
-// 	}
+	arg := db.UpdateAccountParams{
+		ID:          req.ID,
+		Title:       req.Title,
+		Description: req.Description,
+		Value:       req.Value,
+	}
 
-// 	account, err := server.store.UpdateAccount(ctx, arg)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-// 	}
+	account, err := server.store.UpdateAccount(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
 
-// 	ctx.JSON(http.StatusOK, account)
-// }
+	ctx.JSON(http.StatusOK, account)
+}
 
-// type getAccountsRequest struct {
-// 	UserID      int32     `json:"user_id" binding:"required`
-// 	Type        string    `json:"type" binding:"required`
-// 	CategoryID  int32     `json:"category_id"`
-// 	Title       string    `json:"title"`
-// 	Description string    `json:"description"`
-// 	Date        time.Time `json:"date"`
-// }
+type getAccountsRequest struct {
+	UserID      int32     `json:"user_id" binding:"required`
+	Type        string    `json:"type" binding:"required`
+	CategoryID  int32     `json:"category_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Date        time.Time `json:"date"`
+}
 
-// func (server *Server) getAccounts(ctx *gin.Context) {
-// 	var req getAccountsRequest
-// 	err := ctx.ShouldBindUri(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusNotFound, errorResponse(err))
-// 	}
+func (server *Server) getAccounts(ctx *gin.Context) {
+	var req getAccountsRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+	}
 
-// 	arg := db.GetAccountsParams{
-// 		UserID:      req.UserID,
-// 		Type:        req.Type,
-// 		CategoryID:  req.CategoryID,
-// 		Title:       req.Title,
-// 		Description: req.Description,
-// 		Date:        req.Date,
-// 	}
+	var accounts []db.Account
+	var parametersHasUserIdAndType = req.UserID > 0 && len(req.Type) > 0
 
-// 	accounts, err := server.store.GetAccounts(ctx, arg)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 		return
-// 	}
+	filterAsByUserIdAnType := len(req.Description) == 0 && len(req.Title) == 0 && parametersHasUserIdAndType
+	filterAsByUserIdAnType {
+		arg := db.GetAccountsByUserIdAndTypeParams{
+			UserID: req.UserID,
+			Type:   req.Type,
+		}
 
-// 	ctx.JSON(http.StatusOK, accounts)
-// }
+		accountsByUserIdAndType, err := server.store.GetAccountsByUserIdAndType(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+		accounts = categoriesByUserIdAndType
+	}
 
-// type getAccountGraphRequest struct {
-// 	UserID int32 `uri:"user_id" binding:"required"`
-// 	Type   int32 `uri:"type" binding:"required"`
-// }
+	ctx.JSON(http.StatusOK, accounts)
+}
 
-// func (server *Server) getAccountGraph(ctx *gin.Context) {
-// 	var req getAccountGraphRequest
-// 	err := ctx.ShouldBindJSON(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusNotFound, errorResponse(err))
-// 	}
+type getAccountGraphRequest struct {
+	UserID int32 `uri:"user_id" binding:"required"`
+	Type   int32 `uri:"type" binding:"required"`
+}
 
-// 	arg := db.GetAccountsGraphParams{
-// 		UserID: req.UserID,
-// 		Type:   req.Type,
-// 	}
+func (server *Server) getAccountGraph(ctx *gin.Context) {
+	var req getAccountGraphRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+	}
 
-// 	countGraph, err := server.store.GetAccountsGraph(ctx, arg)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 		return
-// 	}
+	arg := db.GetAccountsGraphParams{
+		UserID: req.UserID,
+		Type:   req.Type,
+	}
 
-// 	ctx.JSON(http.StatusOK, countGraph)
-// }
+	countGraph, err := server.store.GetAccountsGraph(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 
-// type getAccountReportsRequest struct {
-// 	UserID int32 `uri:"user_id" binding:"required"`
-// 	Type   int32 `uri:"type" binding:"required"`
-// }
+	ctx.JSON(http.StatusOK, countGraph)
+}
 
-// func (server *Server) getAccountReports(ctx *gin.Context) {
-// 	var req getAccountGraphRequest
-// 	err := ctx.ShouldBindJSON(&req)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusNotFound, errorResponse(err))
-// 	}
+type getAccountReportsRequest struct {
+	UserID int32 `uri:"user_id" binding:"required"`
+	Type   int32 `uri:"type" binding:"required"`
+}
 
-// 	arg := db.GetAccountsReportsParams{
-// 		UserID: req.UserID,
-// 		Type:   req.Type,
-// 	}
+func (server *Server) getAccountReports(ctx *gin.Context) {
+	var req getAccountGraphRequest
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
+	}
 
-// 	sumReports, err := server.store.GetAccountsReports(ctx, arg)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-// 		return
-// 	}
+	arg := db.GetAccountsReportsParams{
+		UserID: req.UserID,
+		Type:   req.Type,
+	}
 
-// 	ctx.JSON(http.StatusOK, sumReports)
-// }
+	sumReports, err := server.store.GetAccountsReports(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, sumReports)
+}

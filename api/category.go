@@ -122,15 +122,16 @@ func (server *Server) getCategories(ctx *gin.Context) {
 	}
 
 	var categories []db.Category
+	var parametersHasUserIdAndType = req.UserID > 0 && len(req.Type) > 0
 
-	filterAsByUserIdAnType := len(req.Description) == 0 && len(req.Title) == 0 && req.UserID > 0 && len(req.Type) > 0
+	filterAsByUserIdAnType := len(req.Description) == 0 && len(req.Title) == 0 && parametersHasUserIdAndType
 	filterAsByUserIdAnType {
 		arg := db.GetCategoriesByUserIdAndTypeParams{
 			UserID: req.UserID,
 			Type:   req.Type,
 		}
 
-		categoriesByUserIdAndType, err := server.store.GetCategories(ctx, arg)
+		categoriesByUserIdAndType, err := server.store.GetCategoriesByUserIdAndType(ctx, arg)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, errorResponse(err))
 			return
@@ -138,7 +139,7 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		categories = categoriesByUserIdAndType
 	}
 
-	filterAsByUserIdAndTypeAndDescription := len(req.Title) == 0 && len(req.Description) > 0 && req.UserID > 0 && len(req.Type) > 0
+	filterAsByUserIdAndTypeAndDescription := len(req.Title) == 0 && len(req.Description) > 0 && parametersHasUserIdAndType
 	if filterAsByUserIdAndTypeAndDescription {
 		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
 			UserID:      req.UserID,
@@ -154,7 +155,7 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		categories = categoriesByUserIdAndTypeAnDescription
 	}
 
-	filterAsByUserIdAndTypeAndTitle := len(req.Title) > 0 && len(req.Description) == 0 && req.UserID > 0 && len(req.Type) > 0
+	filterAsByUserIdAndTypeAndTitle := len(req.Title) > 0 && len(req.Description) == 0 && parametersHasUserIdAndType
 	if filterAsByUserIdAndTypeAndTitle {
 		arg := db.GetCategoriesByUserIdAndTypeAndTitleParams{
 			UserID: req.UserID,
@@ -170,7 +171,7 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		categories = categoriesByUserIdAndTypeAndTitle
 	}
 	
-	filterAsAllParameters := len(req.Title) > 0 && len(req.Description) > 0 && req.UserID > 0 && len(req.Type) > 0
+	filterAsAllParameters := len(req.Title) > 0 && len(req.Description) > 0 && parametersHasUserIdAndType
 	if filterAsAllParameters {
 		arg := db.GetCategoriesParams{
 			UserID: req.UserID,
