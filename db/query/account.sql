@@ -133,7 +133,7 @@ WHERE a.user_id = $1
   AND a.date like $3;
 
 -- name: GetAccountsReports :one
-SELECT SUM(value) AS sum_values 
+SELECT SUM(value) AS sum_value 
 FROM accounts
 WHERE user_id = $1
   AND type = $2;

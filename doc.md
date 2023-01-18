@@ -54,3 +54,11 @@ go mod tidy
     -- In the CMD you have to be in the root folder of the project to be able to find the SQLC configuration file "sqlc.yaml".
 docker run --rm -v "%cd%:/src" -w /src kjconroy/sqlc generate
 
+-- Install dependency pq
+go get github.com/lib/pq
+
+-- Install dependency pq
+go get github.com/stretchr/testify
+
+-- Add project sql import
+go get -t github.com/albertoparente/go-finance-app/db/sqlc

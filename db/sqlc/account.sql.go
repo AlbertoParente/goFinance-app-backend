@@ -611,7 +611,7 @@ func (q *Queries) GetAccountsGraph(ctx context.Context, arg GetAccountsGraphPara
 }
 
 const getAccountsReports = `-- name: GetAccountsReports :one
-SELECT SUM(value) AS sum_values 
+SELECT SUM(value) AS sum_value 
 FROM accounts
 WHERE user_id = $1
   AND type = $2
@@ -624,9 +624,9 @@ type GetAccountsReportsParams struct {
 
 func (q *Queries) GetAccountsReports(ctx context.Context, arg GetAccountsReportsParams) (int64, error) {
 	row := q.db.QueryRowContext(ctx, getAccountsReports, arg.UserID, arg.Type)
-	var sum_values int64
-	err := row.Scan(&sum_values)
-	return sum_values, err
+	var sum_value int64
+	err := row.Scan(&sum_value)
+	return sum_value, err
 }
 
 const updateAccount = `-- name: UpdateAccount :one
