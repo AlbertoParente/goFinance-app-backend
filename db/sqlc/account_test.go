@@ -62,3 +62,29 @@ func TestDeleteAccount(t *testing.T) {
 	err := testQueries.DeleteAccount(context.Background(), account.ID)
 	require.NoError(t, err)
 }
+
+func TestListGetReports(t *testing.T) {
+	lastAccount := createRandomAccount(t)
+
+	arg := GetAccountsReportsParams{
+		UserID: lastAccount.UserID,
+		Type:   lastAccount.Type,
+	}
+
+	sumValue, err := testQueries.GetAccountsReports(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, sumValue)
+}
+
+func TestListGetGraph(t *testing.T) {
+	lastAccount := createRandomAccount(t)
+
+	arg := GetAccountsGraphParams{
+		UserID: lastAccount.UserID,
+		Type:   lastAccount.Type,
+	}
+
+	graphValue, err := testQueries.GetAccountsGraph(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, graphValue)
+}
