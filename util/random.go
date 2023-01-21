@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
+	"time"
 )
 
 const alphabet = "abcdefghijlkmnopqrstuvwxyz"
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 func RandomString(number int) string {
 	var sb strings.Builder
