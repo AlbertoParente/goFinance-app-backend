@@ -20,7 +20,7 @@ func NewServer(store *db.SQLStore) *Server {
 
 	router.POST("/category", server.createCategory)
 	router.GET("/category/id/:id", server.getCategory)
-	router.GET("/category", server.getCategories)
+	router.GET("/category", server.getCategory)
 	router.DELETE("/category/:id", server.deleteCategory)
 	router.PUT("/category/:id", server.updateCategory)
 
