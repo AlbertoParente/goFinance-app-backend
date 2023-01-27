@@ -69,3 +69,27 @@ func (server *Server) getUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, user)
 }
+
+type getUserByIdRequest struct {
+	ID int32 `uri:"id" binding:"required"`
+}
+
+func (server *Server) getUserById(ctx *gin.Context) {
+	var req getUserByIdRequest
+	err := ctx.ShouldBindUri(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	}
+
+	user, err := server.store.GetUserById(ctx, req.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
+}

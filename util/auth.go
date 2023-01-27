@@ -2,6 +2,7 @@ package util
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
@@ -38,15 +39,15 @@ func ValidateToken(ctx *gin.Context, token string) error {
 	return nil
 }
 
-// func GetTokenInHeaderAndVerify(ctx *gin.Context) error {
-// 	authorizationHeaderKey := ctx.GetHeader("authorization")
-// 	fields := strings.Fields(authorizationHeaderKey)
-// 	tokenToValidate := fields[1]
-// 	errOnValiteToken := ValidateToken(ctx, tokenToValidate)
+func GetTokenInHeaderAndVerify(ctx *gin.Context) error {
+	authorizationHeaderKey := ctx.GetHeader("authorization")
+	fields := strings.Fields(authorizationHeaderKey)
+	tokenToValidate := fields[1]
+	errOnValiteToken := ValidateToken(ctx, tokenToValidate)
 
-// 	if errOnValiteToken != nil {
-// 		return errOnValiteToken
-// 	}
+	if errOnValiteToken != nil {
+		return errOnValiteToken
+	}
 
-// 	return nil
-// }
+	return nil
+}
