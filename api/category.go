@@ -125,36 +125,36 @@ func (server *Server) updateCategory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, category)
 }
 
-type getCategoriesRequest struct {
-	UserID      int32  `json:"user_id" binding:"required"`
-	Type        string `json:"type" binding:"required"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-}
+// type getCategoriesRequest struct {
+// 	UserID      int32  `json:"user_id" binding:"required"`
+// 	Type        string `json:"type" binding:"required"`
+// 	Title       string `json:"title"`
+// 	Description string `json:"description"`
+// }
 
-func (server *Server) getCategories(ctx *gin.Context) {
-	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	if errOnValiteToken != nil {
-		return
-	}
-	var req getCategoriesRequest
-	err := ctx.ShouldBindJSON(&req)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
+// func (server *Server) getCategories(ctx *gin.Context) {
+// 	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+// 	if errOnValiteToken != nil {
+// 		return
+// 	}
+// 	var req getCategoriesRequest
+// 	err := ctx.ShouldBindJSON(&req)
+// 	if err != nil {
+// 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+// 		return
+// 	}
 
-	arg := db.GetCategoriesParams{
-		UserID:      req.UserID,
-		Type:        req.Type,
-		Title:       req.Title,
-		Description: req.Description,
-	}
+// 	arg := db.GetCategoriesParams{
+// 		UserID:      req.UserID,
+// 		Type:        req.Type,
+// 		Title:       req.Title,
+// 		Description: req.Description,
+// 	}
 
-	categories, err := server.store.GetCategories(ctx, arg)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-	}
+// 	categories, err := server.store.GetCategories(ctx, arg)
+// 	if err != nil {
+// 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+// 	}
 
-	ctx.JSON(http.StatusOK, categories)
-}
+// 	ctx.JSON(http.StatusOK, categories)
+// }
