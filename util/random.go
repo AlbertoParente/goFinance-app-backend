@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
-	"time"
 )
 
-const alphabet = "abcdefghijlkmnopqrstuvwxyz"
+const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
+// func init() {
+// 	rand.Seed(time.Now().UnixNano())
+// }
 
 func RandomString(number int) string {
 	var sb strings.Builder
@@ -25,5 +24,5 @@ func RandomString(number int) string {
 }
 
 func RandomEmail(number int) string {
-	return fmt.Sprintf("%s@email.com", RandomString(number))
+	return fmt.Sprintf("%s@test.com", RandomString(number))
 }
