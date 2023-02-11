@@ -14,7 +14,7 @@ func createRandomCategory(t *testing.T) Category {
 		UserID:      user.ID,
 		Title:       util.RandomString(12),
 		Type:        "debit",
-		Description: util.RandomString(20),
+		Description: util.RandomString(12),
 	}
 
 	category, err := testQueries.CreateCategory(context.Background(), arg)
@@ -58,7 +58,7 @@ func TestUpdateCategory(t *testing.T) {
 	arg := UpdateCategoriesParams{
 		ID:          category1.ID,
 		Title:       util.RandomString(12),
-		Description: util.RandomString(20),
+		Description: util.RandomString(12),
 	}
 
 	category2, err := testQueries.UpdateCategories(context.Background(), arg)
@@ -71,25 +71,25 @@ func TestUpdateCategory(t *testing.T) {
 	require.NotEmpty(t, category2.CreatedAt)
 }
 
-// func TestListCategories(t *testing.T) {
-// 	lastCategory := createRandomCategory(t)
+func TestListCategories(t *testing.T) {
+	lastCategory := createRandomCategory(t)
 
-// 	arg := GetCategoriesParams{
-// 		UserID:      lastCategory.UserID,
-// 		Type:        lastCategory.Type,
-// 		Title:       lastCategory.Title,
-// 		Description: lastCategory.Description,
-// 	}
+	arg := GetCategoriesParams{
+		UserID:      lastCategory.UserID,
+		Type:        lastCategory.Type,
+		Title:       lastCategory.Title,
+		Description: lastCategory.Description,
+	}
 
-// 	categorys, err := testQueries.GetCategories(context.Background(), arg)
-// 	require.NoError(t, err)
-// 	require.NotEmpty(t, categorys)
+	categorys, err := testQueries.GetCategories(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, categorys)
 
-// 	for _, category := range categorys {
-// 		require.Equal(t, lastCategory.ID, category.ID)
-// 		require.Equal(t, lastCategory.UserID, category.UserID)
-// 		require.Equal(t, lastCategory.Title, category.Title)
-// 		require.Equal(t, lastCategory.Description, category.Description)
-// 		require.NotEmpty(t, lastCategory.CreatedAt)
-// 	}
-// }
+	for _, category := range categorys {
+		require.Equal(t, lastCategory.ID, category.ID)
+		require.Equal(t, lastCategory.UserID, category.UserID)
+		require.Equal(t, lastCategory.Title, category.Title)
+		require.Equal(t, lastCategory.Description, category.Description)
+		require.NotEmpty(t, lastCategory.CreatedAt)
+	}
+}
