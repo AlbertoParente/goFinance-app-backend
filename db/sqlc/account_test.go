@@ -111,7 +111,6 @@ func TestListAccounts(t *testing.T) {
 
 func TestListGetReports(t *testing.T) {
 	lastAccount := createRandomAccount(t)
-
 	arg := GetAccountsReportsParams{
 		UserID: lastAccount.UserID,
 		Type:   lastAccount.Type,
@@ -124,7 +123,6 @@ func TestListGetReports(t *testing.T) {
 
 func TestListGetGraph(t *testing.T) {
 	lastAccount := createRandomAccount(t)
-
 	arg := GetAccountsGraphParams{
 		UserID: lastAccount.UserID,
 		Type:   lastAccount.Type,
