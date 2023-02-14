@@ -1,4 +1,4 @@
-// package api
+package api
 
 // import (
 // 	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
