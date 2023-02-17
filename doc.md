@@ -62,3 +62,6 @@ go get github.com/stretchr/testify
 
 -- Add project sql import
 go get -t github.com/albertoparente/go-finance-app/db/sqlc
+
+-- Install dependency gin
+go get -u github.com/gin-gonic/gin
