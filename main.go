@@ -1,42 +1,43 @@
 package main
 
-// import (
-// 	"database/sql"
-// 	"log"
-// 	"os"
+import (
+	"database/sql"
+	"log"
 
-// 	// "github.com/AlbertoParente/go-finance-app/api"
-// 	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
-// 	"github.com/joho/godotenv"
-// 	_ "github.com/lib/pq"
-// )
+	// "os"
 
-// const (
-// 	dbDriver      = "postgres"
-// 	dbSource      = "postgresql://postgres:postgres@localhost:5432/go_finance?sslmode=disable"
-// 	serverAddress = "0.0.0.0:8000"
-// )
+	"github.com/AlbertoParente/go-finance-app/api"
+	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
+	_ "github.com/lib/pq"
+	// "github.com/joho/godotenv"
+)
 
-// func main() {
-// 	err := godotenv.Load()
-// 	if err != nil {
-// 		log.Fatal("Error loading .env file")
-// 	}
+const (
+	dbDriver      = "postgres"
+	dbSource      = "postgresql://postgres:postgres@localhost:5432/go_finance?sslmode=disable"
+	serverAddress = "0.0.0.0:8000"
+)
 
-// 	dbDriver := os.Getenv("DB_DRIVER")
-// 	dbSource := os.Getenv("DB_SOURCE")
-// 	serverAddress := os.Getenv("SERVER_ADDRESS")
+func main() {
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
-// 	conn, err := sql.Open(dbDriver, dbSource)
-// 	if err != nil {
-// 		log.Fatal("Cannot connect to db: ", err)
-// 	}
+	// 	dbDriver := os.Getenv("DB_DRIVER")
+	// 	dbSource := os.Getenv("DB_SOURCE")
+	// 	serverAddress := os.Getenv("SERVER_ADDRESS")
 
-// 	store := db.NewStore(conn)
-// 	server := api.NewServer(store)
+	conn, err := sql.Open(dbDriver, dbSource)
+	if err != nil {
+		log.Fatal("Cannot connect to db: ", err)
+	}
 
-// 	err = server.Start(serverAddress)
-// 	if err != nil {
-// 		log.Fatal("Cannot start api: ", err)
-// 	}
-// }
+	store := db.NewStore(conn)
+	server := api.NewServer(store)
+
+	err = server.Start(serverAddress)
+	if err != nil {
+		log.Fatal("Cannot start api: ", err)
+	}
+}
