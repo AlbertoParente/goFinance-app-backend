@@ -18,11 +18,11 @@ func NewServer(store *db.SQLStore) *Server {
 	router.GET("/user/:username", server.getUser)
 	router.GET("/user/id/:id", server.getUserById)
 
-	// 	router.POST("/category", server.createCategory)
-	// 	router.GET("/category/id/:id", server.getCategory)
+	router.POST("/category", server.createCategory)
+	router.GET("/category/id/:id", server.getCategory)
+	router.DELETE("/category/:id", server.deleteCategory)
+	router.PUT("/category/:id", server.updateCategory)
 	// 	router.GET("/category", server.getCategory)
-	// 	router.DELETE("/category/:id", server.deleteCategory)
-	// 	router.PUT("/category/:id", server.updateCategory)
 
 	// 	router.POST("/account", server.createAccount)
 	// 	router.GET("/account/id/:id", server.getAccount)
