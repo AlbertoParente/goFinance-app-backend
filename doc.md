@@ -65,3 +65,6 @@ go get -t github.com/albertoparente/go-finance-app/db/sqlc
 
 -- Install dependency gin
 go get -u github.com/gin-gonic/gin
+
+-- Install dependency godotenv
+go get github.com/joho/godotenv
