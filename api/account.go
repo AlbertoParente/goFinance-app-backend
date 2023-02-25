@@ -6,7 +6,7 @@ import (
 	"time"
 
 	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
-	// "github.com/AlbertoParente/go-finance-app/util"
+	"github.com/AlbertoParente/go-finance-app/util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,10 +21,10 @@ type createAccountRequest struct {
 }
 
 func (server *Server) createAccount(ctx *gin.Context) {
-	// errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	// if errOnValiteToken != nil {
-	// 	return
-	// }
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req createAccountRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
@@ -67,10 +67,10 @@ type getAccountRequest struct {
 }
 
 func (server *Server) getAccount(ctx *gin.Context) {
-	// errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	// if errOnValiteToken != nil {
-	// 	return
-	// }
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req getAccountRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -96,10 +96,10 @@ type getAccountGraphRequest struct {
 }
 
 func (server *Server) getAccountGraph(ctx *gin.Context) {
-	// errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	// if errOnValiteToken != nil {
-	// 	return
-	// }
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req getAccountGraphRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -126,10 +126,10 @@ type getAccountReportsRequest struct {
 }
 
 func (server *Server) getAccountReports(ctx *gin.Context) {
-	// errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	// if errOnValiteToken != nil {
-	// 	return
-	// }
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req getAccountReportsRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -155,10 +155,10 @@ type deleteAccountRequest struct {
 }
 
 func (server *Server) deleteAccount(ctx *gin.Context) {
-	// errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	// if errOnValiteToken != nil {
-	// 	return
-	// }
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req deleteAccountRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -182,10 +182,10 @@ type updateAccountRequest struct {
 }
 
 func (server *Server) updateAccount(ctx *gin.Context) {
-	// errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	// if errOnValiteToken != nil {
-	// 	return
-	// }
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req updateAccountRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
@@ -217,10 +217,10 @@ type getAccountsRequest struct {
 }
 
 func (server *Server) getAccounts(ctx *gin.Context) {
-	// errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
-	// if errOnValiteToken != nil {
-	// 	return
-	// }
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req getAccountsRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
