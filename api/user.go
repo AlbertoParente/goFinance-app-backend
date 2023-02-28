@@ -35,8 +35,8 @@ func (server *Server) createUser(ctx *gin.Context) {
 	arg := db.CreateUserParams{
 		Username: req.Username,
 		Password: passwordHashed,
-		Password: req.Password,
-		Email:    req.Email,
+		// Password: req.Password,
+		Email: req.Email,
 	}
 
 	user, err := server.store.CreateUser(ctx, arg)
