@@ -155,17 +155,61 @@ SELECT id, user_id, title, type, description, created_at
 FROM categories 
 WHERE user_id = $1 
   AND type = $2 
-  AND title LIKE $3
+  AND description LIKE $3
 `
 
 type GetCategoriesByUserIdAndTypeAnDescriptionParams struct {
+	UserID      int32  `json:"user_id"`
+	Type        string `json:"type"`
+	Description string `json:"description"`
+}
+
+func (q *Queries) GetCategoriesByUserIdAndTypeAnDescription(ctx context.Context, arg GetCategoriesByUserIdAndTypeAnDescriptionParams) ([]Category, error) {
+	rows, err := q.db.QueryContext(ctx, getCategoriesByUserIdAndTypeAnDescription, arg.UserID, arg.Type, arg.Description)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Category{}
+	for rows.Next() {
+		var i Category
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Type,
+			&i.Description,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getCategoriesByUserIdAndTypeAndTitle = `-- name: GetCategoriesByUserIdAndTypeAndTitle :many
+SELECT id, user_id, title, type, description, created_at 
+FROM categories 
+WHERE user_id = $1 
+  AND type = $2
+  AND title LIKE $3
+`
+
+type GetCategoriesByUserIdAndTypeAndTitleParams struct {
 	UserID int32  `json:"user_id"`
 	Type   string `json:"type"`
 	Title  string `json:"title"`
 }
 
-func (q *Queries) GetCategoriesByUserIdAndTypeAnDescription(ctx context.Context, arg GetCategoriesByUserIdAndTypeAnDescriptionParams) ([]Category, error) {
-	rows, err := q.db.QueryContext(ctx, getCategoriesByUserIdAndTypeAnDescription, arg.UserID, arg.Type, arg.Title)
+func (q *Queries) GetCategoriesByUserIdAndTypeAndTitle(ctx context.Context, arg GetCategoriesByUserIdAndTypeAndTitleParams) ([]Category, error) {
+	rows, err := q.db.QueryContext(ctx, getCategoriesByUserIdAndTypeAndTitle, arg.UserID, arg.Type, arg.Title)
 	if err != nil {
 		return nil, err
 	}

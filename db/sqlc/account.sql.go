@@ -325,15 +325,13 @@ WHERE a.user_id = $1
   AND a.type = $2
   AND a.category_id = $3
   AND a.title like $4
-  AND a.description like $5
 `
 
 type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleParams struct {
-	UserID      int32  `json:"user_id"`
-	Type        string `json:"type"`
-	CategoryID  int32  `json:"category_id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	UserID     int32  `json:"user_id"`
+	Type       string `json:"type"`
+	CategoryID int32  `json:"category_id"`
+	Title      string `json:"title"`
 }
 
 type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleRow struct {
@@ -354,7 +352,6 @@ func (q *Queries) GetAccountsByUserIdAndTypeAndCategoryIdAndTitle(ctx context.Co
 		arg.Type,
 		arg.CategoryID,
 		arg.Title,
-		arg.Description,
 	)
 	if err != nil {
 		return nil, err
@@ -363,6 +360,84 @@ func (q *Queries) GetAccountsByUserIdAndTypeAndCategoryIdAndTitle(ctx context.Co
 	items := []GetAccountsByUserIdAndTypeAndCategoryIdAndTitleRow{}
 	for rows.Next() {
 		var i GetAccountsByUserIdAndTypeAndCategoryIdAndTitleRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Title,
+			&i.Type,
+			&i.Description,
+			&i.Value,
+			&i.Date,
+			&i.CreatedAt,
+			&i.CategoryTitle,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription = `-- name: GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription :many
+SELECT a.id,
+       a.user_id,
+       a.title,
+       a.type,
+       a.description,
+       a.value,
+       a.date,
+       a.created_at,
+       c.title AS category_title
+FROM accounts a
+  LEFT JOIN categories c ON a.category_id = c.id
+WHERE a.user_id = $1 
+  AND a.type = $2
+  AND a.category_id = $3
+  AND a.title like $4
+  AND a.description LIKE $5
+`
+
+type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionParams struct {
+	UserID      int32  `json:"user_id"`
+	Type        string `json:"type"`
+	CategoryID  int32  `json:"category_id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+
+type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow struct {
+	ID            int32          `json:"id"`
+	UserID        int32          `json:"user_id"`
+	Title         string         `json:"title"`
+	Type          string         `json:"type"`
+	Description   string         `json:"description"`
+	Value         int32          `json:"value"`
+	Date          time.Time      `json:"date"`
+	CreatedAt     time.Time      `json:"created_at"`
+	CategoryTitle sql.NullString `json:"category_title"`
+}
+
+func (q *Queries) GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription,
+		arg.UserID,
+		arg.Type,
+		arg.CategoryID,
+		arg.Title,
+		arg.Description,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow{}
+	for rows.Next() {
+		var i GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,

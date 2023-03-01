@@ -81,8 +81,25 @@ FROM accounts a
 WHERE a.user_id = $1 
   AND a.type = $2
   AND a.category_id = $3
+  AND a.title like $4;
+
+-- name: GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription :many
+SELECT a.id,
+       a.user_id,
+       a.title,
+       a.type,
+       a.description,
+       a.value,
+       a.date,
+       a.created_at,
+       c.title AS category_title
+FROM accounts a
+  LEFT JOIN categories c ON a.category_id = c.id
+WHERE a.user_id = $1 
+  AND a.type = $2
+  AND a.category_id = $3
   AND a.title like $4
-  AND a.description like $5;
+  AND a.description LIKE $5;
 
 -- name: GetAccountsByUserIdAndTypeAndTitle :many
 SELECT a.id,

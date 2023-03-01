@@ -20,19 +20,26 @@ WHERE user_id = $1
   AND type = $2 
   AND title LIKE $3 
   AND description LIKE $4;
-
-  -- name: GetCategoriesByUserIdAndType :many
+  
+-- name: GetCategoriesByUserIdAndType :many
 SELECT * 
 FROM categories 
 WHERE user_id = $1 
-  AND type = $2; 
+  AND type = $2;
+
+-- name: GetCategoriesByUserIdAndTypeAndTitle :many
+SELECT * 
+FROM categories 
+WHERE user_id = $1 
+  AND type = $2
+  AND title LIKE $3;
 
   -- name: GetCategoriesByUserIdAndTypeAnDescription :many
 SELECT * 
 FROM categories 
 WHERE user_id = $1 
   AND type = $2 
-  AND title LIKE $3; 
+  AND description LIKE $3; 
 
 -- name: UpdateCategories :one
 UPDATE categories 
