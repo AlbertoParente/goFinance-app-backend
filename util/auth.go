@@ -1,54 +1,56 @@
 package util
 
-// import (
-// 	"net/http"
-// 	// "strings"
+import (
+	"net/http"
+	"strings"
 
-// 	"github.com/gin-gonic/gin"
-// 	"github.com/golang-jwt/jwt/v4"
-// 	// "github.com/golang-jwt/jwt/v4"
-// )
+	// "strings"
 
-// type Claims struct {
-// 	Username string `json:"username"`
-// 	jwt.RegisteredClaims
-// }
+	"github.com/gin-gonic/gin"s
+	"github.com/golang-jwt/jwt/v4"
+	// "github.com/golang-jwt/jwt/v4"
+)
 
-// func ValidateToken(ctx *gin.Context, token string) error {
-// 	claims := &Claims{}
-// 	var jwtSignedKey = []byte("secret_key")
-// 	tokenParse, err := jwt.ParseWithClaims(token, claims,
-// 		func(t *jwt.Token) (interface{}, error) {
-// 			return jwtSignedKey, nil
-// 		})
+type Claims struct {
+	Username string `json:"username"`
+	jwt.RegisteredClaims
+}
 
-// 	if err != nil {
-// 		if err == jwt.ErrSignatureInvalid {
-// 			ctx.JSON(http.StatusUnauthorized, err)
-// 			return err
-// 		}
-// 		ctx.JSON(http.StatusBadRequest, err)
-// 		return err
-// 	}
+func ValidateToken(ctx *gin.Context, token string) error {
+	claims := &Claims{}
+	var jwtSignedKey = []byte("secret_key")
+	tokenParse, err := jwt.ParseWithClaims(token, claims,
+		func(t *jwt.Token) (interface{}, error) {
+			return jwtSignedKey, nil
+		})
 
-// 	if !tokenParse.Valid {
-// 		ctx.JSON(http.StatusUnauthorized, "Token is invalid")
-// 		return nil
-// 	}
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			ctx.JSON(http.StatusUnauthorized, err)
+			return err
+		}
+		ctx.JSON(http.StatusBadRequest, err)
+		return err
+	}
 
-// 	ctx.Next()
-// 	return nil
-// }
+	if !tokenParse.Valid {
+		ctx.JSON(http.StatusUnauthorized, "Token is invalid")
+		return nil
+	}
 
-// func GetTokenInHeaderAndVerify(ctx *gin.Context) error {
-//   authorizationHeaderKey := ctx.GetHeader("authorization")
-//   fields := strings.Fields(authorizationHeaderKey)
-//   tokenToValidate := fields[1]
-//   errOnValiteToken := ValidateToken(ctx, tokenToValidate)
+	ctx.Next()
+	return nil
+}
 
-//   if errOnValiteToken != nil {
-//     return errOnValiteToken
-//   }
+func GetTokenInHeaderAndVerify(ctx *gin.Context) error {
+	authorizationHeaderKey := ctx.GetHeader("authorization")
+	fields := strings.Fields(authorizationHeaderKey)
+	tokenToValidate := fields[1]
+	errOnValiteToken := ValidateToken(ctx, tokenToValidate)
 
-//   return nil
-// }
+	if errOnValiteToken != nil {
+		return errOnValiteToken
+	}
+
+	return nil
+}
