@@ -144,16 +144,56 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.GetCategoriesParams{
-		UserID:      req.UserID,
-		Type:        req.Type,
-		Title:       req.Title,
-		Description: req.Description,
+	var categories []db.Category
+
+	if len(req.Description) == 0 && len(req.Title) == 0 {
+		arg := db.GetCategoriesByUserIdAndTypeParams{
+			UserID: req.UserID,
+			Type:   req.Type,
+		}
+
+		categoriesByUserIdAndType, err := server.store.GetCategoriesByUserIdAndType(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		categories = categoriesByUserIdAndType
+
 	}
 
-	categories, err := server.store.GetCategories(ctx, arg)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	if len(req.Title) == 0 && len(req.Description) > 0 {
+		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
+			UserID:      req.UserID,
+			Type:        req.Type,
+			Description: req.Description,
+		}
+
+		categoriesByUserIdAndTypeAnDescriptionParams, err := server.store.GetCategoriesByUserIdAndTypeAnDescription(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		categories = categoriesByUserIdAndTypeAnDescriptionParams
+
+	}
+
+	if len(req.Title) > 0 && len(req.Description) == 0 {
+		arg := db.GetCategoriesByUserIdAndTypeAndTitleParams{
+			UserID: req.UserID,
+			Type:   req.Type,
+			Title:  req.Title,
+		}
+
+		categoriesByUserIdAndTypeAnDescriptionParams, err := server.store.GetCategoriesByUserIdAndTypeAndTitle(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		categories = categoriesByUserIdAndTypeAnDescriptionParams
+
 	}
 
 	ctx.JSON(http.StatusOK, categories)
