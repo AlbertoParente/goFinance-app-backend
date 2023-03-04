@@ -145,8 +145,10 @@ func (server *Server) getCategories(ctx *gin.Context) {
 	}
 
 	var categories []db.Category
+	var parametershasUserIdAndType = req.UserID > 0 && len(req.Type) > 0
 
-	if len(req.Description) == 0 && len(req.Title) == 0 {
+	filterAsByUserIdAndType := len(req.Description) == 0 && len(req.Title) == 0 && parametershasUserIdAndType
+	if filterAsByUserIdAndType {
 		arg := db.GetCategoriesByUserIdAndTypeParams{
 			UserID: req.UserID,
 			Type:   req.Type,
@@ -162,7 +164,8 @@ func (server *Server) getCategories(ctx *gin.Context) {
 
 	}
 
-	if len(req.Title) == 0 && len(req.Description) > 0 {
+	filterAsByUserIdAndTypeAndDescription := len(req.Title) == 0 && len(req.Description) > 0 && parametershasUserIdAndType
+	if filterAsByUserIdAndTypeAndDescription {
 		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
 			UserID:      req.UserID,
 			Type:        req.Type,
@@ -179,20 +182,40 @@ func (server *Server) getCategories(ctx *gin.Context) {
 
 	}
 
-	if len(req.Title) > 0 && len(req.Description) == 0 {
+	filterAsByUserIdAndTypeAndTitle := len(req.Title) > 0 && len(req.Description) == 0 && parametershasUserIdAndType
+	if filterAsByUserIdAndTypeAndTitle {
 		arg := db.GetCategoriesByUserIdAndTypeAndTitleParams{
 			UserID: req.UserID,
 			Type:   req.Type,
 			Title:  req.Title,
 		}
 
-		categoriesByUserIdAndTypeAnDescriptionParams, err := server.store.GetCategoriesByUserIdAndTypeAndTitle(ctx, arg)
+		categoriesByUserIdAndTypeAndTitle, err := server.store.GetCategoriesByUserIdAndTypeAndTitle(ctx, arg)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 			return
 		}
 
-		categories = categoriesByUserIdAndTypeAnDescriptionParams
+		categories = categoriesByUserIdAndTypeAndTitle
+
+	}
+
+	filerAsAllParameters := len(req.Title) > 0 && len(req.Description) > 0 && parametershasUserIdAndType
+	if filerAsAllParameters {
+		arg := db.GetCategoriesParams{
+			UserID:      req.UserID,
+			Type:        req.Type,
+			Title:       req.Title,
+			Description: req.Description,
+		}
+
+		categoriesWithAllFilters, err := server.store.GetCategories(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		categories = categoriesWithAllFilters
 
 	}
 
