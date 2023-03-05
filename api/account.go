@@ -227,34 +227,42 @@ func (server *Server) getAccounts(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.GetAccountsParams{
-		UserID:      req.UserID,
-		Type:        req.Type,
-		CategoryID:  req.CategoryID,
-		Title:       req.Title,
-		Description: req.Description,
-		Date:        req.Date,
+	var accounts interface{}
+	var parametershasUserIdAndType = req.UserID > 0 && len(req.Type) > 0
+
+	filterAsByUserIdAndType := req.CategoryID == 0 && len(req.Date.GoString()) == 0 && len(req.Description) == 0 && len(req.Title) == 0 && parametershasUserIdAndType
+	if filterAsByUserIdAndType {
+		arg := db.GetAccountsByUserIdAndTypeParams{
+			UserID: req.UserID,
+			Type:   req.Type,
+		}
+
+		accountsByUserIdAndType, err := server.store.GetAccountsByUserIdAndType(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		accounts = accountsByUserIdAndType
+
 	}
 
-	// arg := db.GetAccountsParams{
-	// 	UserID: req.UserID,
-	// 	Type:   req.Type,
-	// 	CategoryID: sql.NullInt32{
-	// 		Int32: req.CategoryID,
-	// 		Valid: req.CategoryID > 0,
-	// 	},
-	// 	Title:       req.Title,
-	// 	Description: req.Description,
-	// 	Date: sql.NullTime{
-	// 		Time:  req.Date,
-	// 		Valid: !req.Date.IsZero(),
-	// 	},
-	// }
+	filterAsByUserIdAndTypeAndCategoryId := req.CategoryID != 0 && len(req.Date.GoString()) == 0 && len(req.Description) == 0 && len(req.Title) == 0 && parametershasUserIdAndType
+	if filterAsByUserIdAndTypeAndCategoryId {
+		arg := db.GetAccountsByUserIdAndTypeAndCategoryIdParams{
+			UserID:     req.UserID,
+			Type:       req.Type,
+			CategoryID: req.CategoryID,
+		}
 
-	accounts, err := server.store.GetAccounts(ctx, arg)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
+		accountsByUserIdAndTypeAnCategoryId, err := server.store.GetAccountsByUserIdAndTypeAndCategoryId(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		accounts = accountsByUserIdAndTypeAnCategoryId
+
 	}
 
 	ctx.JSON(http.StatusOK, accounts)
