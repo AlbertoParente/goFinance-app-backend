@@ -19,7 +19,7 @@ type Querier interface {
 	GetAccountsByUserIdAndType(ctx context.Context, arg GetAccountsByUserIdAndTypeParams) ([]GetAccountsByUserIdAndTypeRow, error)
 	GetAccountsByUserIdAndTypeAndCategoryId(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdRow, error)
 	GetAccountsByUserIdAndTypeAndCategoryIdAndTitle(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdAndTitleParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdAndTitleRow, error)
-	GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow, error)
+	GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescription(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionRow, error)
 	GetAccountsByUserIdAndTypeAndDate(ctx context.Context, arg GetAccountsByUserIdAndTypeAndDateParams) ([]GetAccountsByUserIdAndTypeAndDateRow, error)
 	GetAccountsByUserIdAndTypeAndDescription(ctx context.Context, arg GetAccountsByUserIdAndTypeAndDescriptionParams) ([]GetAccountsByUserIdAndTypeAndDescriptionRow, error)
 	GetAccountsByUserIdAndTypeAndTitle(ctx context.Context, arg GetAccountsByUserIdAndTypeAndTitleParams) ([]GetAccountsByUserIdAndTypeAndTitleRow, error)

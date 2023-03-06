@@ -83,7 +83,7 @@ WHERE a.user_id = $1
   AND a.category_id = $3
   AND a.title like $4;
 
--- name: GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription :many
+-- name: GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescription :many
 SELECT a.id,
        a.user_id,
        a.title,

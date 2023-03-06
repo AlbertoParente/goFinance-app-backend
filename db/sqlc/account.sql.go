@@ -384,7 +384,7 @@ func (q *Queries) GetAccountsByUserIdAndTypeAndCategoryIdAndTitle(ctx context.Co
 	return items, nil
 }
 
-const getAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription = `-- name: GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription :many
+const getAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescription = `-- name: GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescription :many
 SELECT a.id,
        a.user_id,
        a.title,
@@ -403,7 +403,7 @@ WHERE a.user_id = $1
   AND a.description LIKE $5
 `
 
-type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionParams struct {
+type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionParams struct {
 	UserID      int32  `json:"user_id"`
 	Type        string `json:"type"`
 	CategoryID  int32  `json:"category_id"`
@@ -411,7 +411,7 @@ type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionParams struct {
 	Description string `json:"description"`
 }
 
-type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow struct {
+type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionRow struct {
 	ID            int32          `json:"id"`
 	UserID        int32          `json:"user_id"`
 	Title         string         `json:"title"`
@@ -423,8 +423,8 @@ type GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow struct {
 	CategoryTitle sql.NullString `json:"category_title"`
 }
 
-func (q *Queries) GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow, error) {
-	rows, err := q.db.QueryContext(ctx, getAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription,
+func (q *Queries) GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescription(ctx context.Context, arg GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionParams) ([]GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescription,
 		arg.UserID,
 		arg.Type,
 		arg.CategoryID,
@@ -435,9 +435,9 @@ func (q *Queries) GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescription(ctx
 		return nil, err
 	}
 	defer rows.Close()
-	items := []GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow{}
+	items := []GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionRow{}
 	for rows.Next() {
-		var i GetAccountsByUserIdAndTypeAndCategoryIdAndTitleDescriptionRow
+		var i GetAccountsByUserIdAndTypeAndCategoryIdAndTitleAndDescriptionRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
