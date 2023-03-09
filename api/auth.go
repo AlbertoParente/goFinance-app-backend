@@ -1,26 +1,26 @@
 package api
 
-// import (
-// 	"bytes"
-// 	"crypto/sha512"
-// 	"database/sql"
-// 	"net/http"
-// 	"time"
+import "github.com/golang-jwt/jwt/v4"
 
-// 	"github.com/gin-gonic/gin"
-// 	"github.com/golang-jwt/jwt/v4"
-// 	"golang.org/x/crypto/bcrypt"
-// )
+// "bytes"
+// "crypto/sha512"
+// "database/sql"
+// "net/http"
+// "time"
 
-// type loginRequest struct {
-// 	Username string `json:"username" binding:"required"`
-// 	Password string `json:"password" binding:"required"`
-// }
+// "github.com/gin-gonic/gin"
+// "github.com/golang-jwt/jwt/v4"
+// "golang.org/x/crypto/bcrypt"
 
-// type Claims struct {
-// 	Username string `json:"username"`
-// 	jwt.RegisteredClaims
-// }
+type loginRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.RegisteredClaims
+}
 
 // func (server *Server) login(ctx *gin.Context) {
 // 	var req loginRequest
