@@ -339,6 +339,41 @@ func (server *Server) getAccounts(ctx *gin.Context) {
 		accounts = accountsByUserIdAndTypeAndDescription
 
 	}
+	
+	filterAsByUserIdAndTypeAndTitle := req.CategoryID == 0 && len(req.Date.GoString()) == 0 && len(req.Description) == 0 && len(req.Title) > 0 && parametershasUserIdAndType
+	if filterAsByUserIdAndTypeAndTitle {
+		arg := db.GetAccountsByUserIdAndTypeAndDescriptionParams{
+			UserID:      req.UserID,
+			Type:        req.Type,
+			Title: req.Title,
+		}
+
+		accountsByUserIdAndTypeAndTitle, err := server.store.GetAccountsByUserIdAndTypeAndTitle(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		
+	filterAsAllParameters := req.CategoryID > 0 && len(req.Date.GoString()) > 0 && len(req.Description) > 0 && len(req.Title) > 0 && parametershasUserIdAndType
+	if filterAsAllParameters {
+		arg := db.GetAccountsByUserIdAndTypeAndDescriptionParams{
+			UserID:      req.UserID,
+			Type:        req.Type,
+			Title: req.Title,
+			CategoryID: req.CategoryID,
+			Description: req.Description,
+			Date: req.Date,
+		}
+
+		accountsByUserIdAndTypeAndTitle, err := server.store.GetAccountsByUserIdAndTypeAndTitle(ctx, arg)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		accounts = accountsByUserIdAndTypeAndTitle
+
+	}
 
 	ctx.JSON(http.StatusOK, accounts)
 }
