@@ -62,8 +62,8 @@ SELECT id, user_id, title, type, description, created_at
 FROM categories 
 WHERE user_id = $1 
   AND type = $2 
-  AND title LIKE $3 
-  AND description LIKE $4
+  AND title LIKE CONCAT('%', $3::text, '%') 
+  AND description LIKE CONCAT('%', $4::text, '%')
 `
 
 type GetCategoriesParams struct {

@@ -18,8 +18,8 @@ SELECT *
 FROM categories 
 WHERE user_id = $1 
   AND type = $2 
-  AND title LIKE $3 
-  AND description LIKE $4;
+  AND title LIKE CONCAT('%', sqlc.arg('title')::text, '%') 
+  AND description LIKE CONCAT('%', sqlc.arg('description')::text, '%');
   
 -- name: GetCategoriesByUserIdAndType :many
 SELECT * 
