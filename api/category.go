@@ -144,79 +144,16 @@ func (server *Server) getCategories(ctx *gin.Context) {
 		return
 	}
 
-	var categories []db.Category
-	var parametershasUserIdAndType = req.UserID > 0 && len(req.Type) > 0
-
-	filterAsByUserIdAndType := len(req.Description) == 0 && len(req.Title) == 0 && parametershasUserIdAndType
-	if filterAsByUserIdAndType {
-		arg := db.GetCategoriesByUserIdAndTypeParams{
-			UserID: req.UserID,
-			Type:   req.Type,
-		}
-
-		categoriesByUserIdAndType, err := server.store.GetCategoriesByUserIdAndType(ctx, arg)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-			return
-		}
-
-		categories = categoriesByUserIdAndType
-
+	arg := db.GetCategoriesParams{
+		UserID:      req.UserID,
+		Type:        req.Type,
+		Title:       Req.Title,
+		Description: req.Description,
 	}
 
-	filterAsByUserIdAndTypeAndDescription := len(req.Title) == 0 && len(req.Description) > 0 && parametershasUserIdAndType
-	if filterAsByUserIdAndTypeAndDescription {
-		arg := db.GetCategoriesByUserIdAndTypeAnDescriptionParams{
-			UserID:      req.UserID,
-			Type:        req.Type,
-			Description: req.Description,
-		}
-
-		categoriesByUserIdAndTypeAnDescriptionParams, err := server.store.GetCategoriesByUserIdAndTypeAnDescription(ctx, arg)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-			return
-		}
-
-		categories = categoriesByUserIdAndTypeAnDescriptionParams
-
-	}
-
-	filterAsByUserIdAndTypeAndTitle := len(req.Title) > 0 && len(req.Description) == 0 && parametershasUserIdAndType
-	if filterAsByUserIdAndTypeAndTitle {
-		arg := db.GetCategoriesByUserIdAndTypeAndTitleParams{
-			UserID: req.UserID,
-			Type:   req.Type,
-			Title:  req.Title,
-		}
-
-		categoriesByUserIdAndTypeAndTitle, err := server.store.GetCategoriesByUserIdAndTypeAndTitle(ctx, arg)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-			return
-		}
-
-		categories = categoriesByUserIdAndTypeAndTitle
-
-	}
-
-	filerAsAllParameters := len(req.Title) > 0 && len(req.Description) > 0 && parametershasUserIdAndType
-	if filerAsAllParameters {
-		arg := db.GetCategoriesParams{
-			UserID:      req.UserID,
-			Type:        req.Type,
-			Title:       req.Title,
-			Description: req.Description,
-		}
-
-		categoriesWithAllFilters, err := server.store.GetCategories(ctx, arg)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-			return
-		}
-
-		categories = categoriesWithAllFilters
-
+	categories, err := server.store.GetCategories(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 	}
 
 	ctx.JSON(http.StatusOK, categories)
