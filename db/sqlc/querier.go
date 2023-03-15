@@ -26,13 +26,11 @@ type Querier interface {
 	GetAccountsGraph(ctx context.Context, arg GetAccountsGraphParams) (int64, error)
 	GetAccountsReports(ctx context.Context, arg GetAccountsReportsParams) (int64, error)
 	GetCategories(ctx context.Context, arg GetCategoriesParams) ([]Category, error)
-	GetCategoriesByUserIdAndType(ctx context.Context, arg GetCategoriesByUserIdAndTypeParams) ([]Category, error)
-	GetCategoriesByUserIdAndTypeAnDescription(ctx context.Context, arg GetCategoriesByUserIdAndTypeAnDescriptionParams) ([]Category, error)
-	GetCategoriesByUserIdAndTypeAndTitle(ctx context.Context, arg GetCategoriesByUserIdAndTypeAndTitleParams) ([]Category, error)
 	GetCategory(ctx context.Context, id int32) (Category, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	GetUserById(ctx context.Context, id int32) (User, error)
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
+	// or this way
 	UpdateCategories(ctx context.Context, arg UpdateCategoriesParams) (Category, error)
 }
 

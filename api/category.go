@@ -147,7 +147,7 @@ func (server *Server) getCategories(ctx *gin.Context) {
 	arg := db.GetCategoriesParams{
 		UserID:      req.UserID,
 		Type:        req.Type,
-		Title:       Req.Title,
+		Title:       req.Title,
 		Description: req.Description,
 	}
 

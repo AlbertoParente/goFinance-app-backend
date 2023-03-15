@@ -18,28 +18,19 @@ SELECT *
 FROM categories 
 WHERE user_id = $1 
   AND type = $2 
-  AND title LIKE CONCAT('%', sqlc.arg('title')::text, '%') 
-  AND description LIKE CONCAT('%', sqlc.arg('description')::text, '%');
-  
--- name: GetCategoriesByUserIdAndType :many
-SELECT * 
-FROM categories 
-WHERE user_id = $1 
-  AND type = $2;
+  AND LOWER(title) LIKE CONCAT('%', LOWER(@title::text), '%') 
+  AND LOWER(description) LIKE CONCAT('%', lOWER(@description::text), '%');
 
--- name: GetCategoriesByUserIdAndTypeAndTitle :many
-SELECT * 
-FROM categories 
-WHERE user_id = $1 
-  AND type = $2
-  AND title LIKE $3;
+/*
+-- or this way
 
-  -- name: GetCategoriesByUserIdAndTypeAnDescription :many
 SELECT * 
 FROM categories 
 WHERE user_id = $1 
   AND type = $2 
-  AND description LIKE $3; 
+  AND LOWER(title) LIKE CONCAT('%', LOWER(sqlc.arg('title')::text), '%') 
+  AND LOWER(description) LIKE CONCAT('%', LOWER(sqlc.arg('description')::text), '%');
+*/  
 
 -- name: UpdateCategories :one
 UPDATE categories 
