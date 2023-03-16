@@ -105,21 +105,21 @@ SELECT a.id,
        a.created_at,
        c.title AS category_title
 FROM accounts a
-  LEFT JOIN categories c ON a.category_id = c.id
+  LEFT JOIN categories c ON c.id = a.category_id 
 WHERE a.user_id = $1 
   AND a.type = $2
-  AND a.category_id = $3 
-  AND a.title LIKE $4
-  AND a.description LIKE $5
-  AND a.date = $6
+  AND LOWER(a.title) LIKE CONCAT('%', LOWER($3::text), '%')
+  AND LOWER(a.description) LIKE CONCAT('%', LOWER($4::text), '%')
+  AND a.category_id = COALESCE($5, a.category_id) 
+  AND a.date = COALESCE($6, a.date)
 `
 
 type GetAccountsParams struct {
 	UserID      int32     `json:"user_id"`
 	Type        string    `json:"type"`
-	CategoryID  int32     `json:"category_id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
+	CategoryID  int32     `json:"category_id"`
 	Date        time.Time `json:"date"`
 }
 
@@ -139,9 +139,9 @@ func (q *Queries) GetAccounts(ctx context.Context, arg GetAccountsParams) ([]Get
 	rows, err := q.db.QueryContext(ctx, getAccounts,
 		arg.UserID,
 		arg.Type,
-		arg.CategoryID,
 		arg.Title,
 		arg.Description,
+		arg.CategoryID,
 		arg.Date,
 	)
 	if err != nil {
