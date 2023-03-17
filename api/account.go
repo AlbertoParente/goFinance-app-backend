@@ -227,7 +227,7 @@ func (server *Server) getAccounts(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.CreateAccountParams{
+	arg := db.GetAccountsParams{
 		UserID:      req.UserID,
 		Type:        req.Type,
 		CategoryID:  req.CategoryID,
