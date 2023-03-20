@@ -6,6 +6,7 @@ import (
 	"time"
 
 	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
+	"github.com/AlbertoParente/go-finance-app/util"
 	"github.com/gin-gonic/gin"
 )
 

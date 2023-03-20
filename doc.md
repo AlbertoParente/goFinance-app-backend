@@ -68,3 +68,6 @@ go get -u github.com/gin-gonic/gin
 
 -- Install dependency godotenv
 go get github.com/joho/godotenv
+
+-- Install dependency jwt
+go get -u github.com/golang-jwt/jwt/v4
