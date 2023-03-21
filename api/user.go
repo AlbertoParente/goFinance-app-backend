@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	db "github.com/AlbertoParente/go-finance-app/db/sqlc"
+	"github.com/AlbertoParente/go-finance-app/util"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,6 +19,10 @@ type createUserRequest struct {
 }
 
 func (server *Server) createUser(ctx *gin.Context) {
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req createUserRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
@@ -51,6 +56,10 @@ type getUserRequest struct {
 }
 
 func (server *Server) getUser(ctx *gin.Context) {
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req getUserRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
@@ -75,6 +84,10 @@ type getUserByIdRequest struct {
 }
 
 func (server *Server) getUserById(ctx *gin.Context) {
+	errOnValiteToken := util.GetTokenInHeaderAndVerify(ctx)
+	if errOnValiteToken != nil {
+		return
+	}
 	var req getUserByIdRequest
 	err := ctx.ShouldBindUri(&req)
 	if err != nil {
