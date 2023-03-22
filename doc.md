@@ -71,3 +71,9 @@ go get github.com/joho/godotenv
 
 -- Install dependency jwt
 go get -u github.com/golang-jwt/jwt/v4
+
+-- Install dependency air
+go get -u github.com/cosmtrek/air
+
+-- Install dependency cors
+go get -u github.com/rs/cors/wrapper/gin
